@@ -1,0 +1,34 @@
+{
+  "name": "Miner #4519",
+  "image": "4519.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Stack"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Gold"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Lime"
+    },
+    {
+      "trait_type": "Left",
+      "value": "Terminal"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Slats"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Pipes"
+    },
+    {
+      "trait_type": "Base",
+      "value": "LED Strip"
+    }
+  ]
+}

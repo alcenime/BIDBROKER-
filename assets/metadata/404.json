@@ -1,0 +1,34 @@
+{
+  "name": "Miner #404",
+  "image": "404.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Rig"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Steel"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Magenta"
+    },
+    {
+      "trait_type": "Left",
+      "value": "Terminal"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Bars"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Antenna"
+    },
+    {
+      "trait_type": "Base",
+      "value": "LED Strip"
+    }
+  ]
+}

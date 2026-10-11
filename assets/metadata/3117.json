@@ -1,0 +1,34 @@
+{
+  "name": "Miner #3117",
+  "image": "3117.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Tower"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Gunmetal"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Amber"
+    },
+    {
+      "trait_type": "Left",
+      "value": "LEDs"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Bars"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Pipes"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Hazard"
+    }
+  ]
+}

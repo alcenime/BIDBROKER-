@@ -1,0 +1,34 @@
+{
+  "name": "Miner #1102",
+  "image": "1102.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Stack"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Violet"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Magenta"
+    },
+    {
+      "trait_type": "Left",
+      "value": "Fans"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Grid"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Antenna"
+    },
+    {
+      "trait_type": "Base",
+      "value": "LED Strip"
+    }
+  ]
+}

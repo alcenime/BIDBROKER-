@@ -1,0 +1,34 @@
+{
+  "name": "Miner #5073",
+  "image": "5073.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Stack"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Steel"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Cyan"
+    },
+    {
+      "trait_type": "Left",
+      "value": "Terminal"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Grid"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Ring"
+    },
+    {
+      "trait_type": "Base",
+      "value": "LED Strip"
+    }
+  ]
+}

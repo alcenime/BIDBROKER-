@@ -1,0 +1,34 @@
+{
+  "name": "Miner #5541",
+  "image": "5541.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Rig"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Teal"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "White"
+    },
+    {
+      "trait_type": "Left",
+      "value": "LEDs"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Grid"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Pipes"
+    },
+    {
+      "trait_type": "Base",
+      "value": "LED Strip"
+    }
+  ]
+}

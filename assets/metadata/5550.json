@@ -1,0 +1,34 @@
+{
+  "name": "Miner #5550",
+  "image": "5550.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Stack"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Steel"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Cyan"
+    },
+    {
+      "trait_type": "Left",
+      "value": "LEDs"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Grid"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Antenna"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Plain"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "Miner #1148",
+  "image": "1148.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Tower"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Violet"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Amber"
+    },
+    {
+      "trait_type": "Left",
+      "value": "Fans"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Fans"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Ring"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Hazard"
+    }
+  ]
+}

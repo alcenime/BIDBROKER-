@@ -1,0 +1,34 @@
+{
+  "name": "Miner #2209",
+  "image": "2209.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Rig"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Gunmetal"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Amber"
+    },
+    {
+      "trait_type": "Left",
+      "value": "Terminal"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Bars"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Antenna"
+    },
+    {
+      "trait_type": "Base",
+      "value": "LED Strip"
+    }
+  ]
+}

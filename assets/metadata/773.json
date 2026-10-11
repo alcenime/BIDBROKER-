@@ -1,0 +1,34 @@
+{
+  "name": "Miner #773",
+  "image": "773.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Tower"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Teal"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Cyan"
+    },
+    {
+      "trait_type": "Left",
+      "value": "Vents"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Fans"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Gem"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Plain"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "shape": {
+    "Stack": 2094,
+    "Tower": 1519,
+    "Rig": 1942
+  },
+  "palette": {
+    "Violet": 973,
+    "Gunmetal": 1285,
+    "Steel": 1230,
+    "Teal": 851,
+    "Rust": 635,
+    "Obsidian": 346,
+    "Gold": 235
+  },
+  "accent": {
+    "Lime": 1949,
+    "Amber": 983,
+    "Cyan": 1235,
+    "White": 577,
+    "Magenta": 811
+  },
+  "left": {
+    "Terminal": 1374,
+    "LEDs": 976,
+    "Vents": 1571,
+    "Fans": 1634
+  },
+  "right": {
+    "Slats": 1196,
+    "Fans": 1567,
+    "Bars": 1560,
+    "Grid": 1232
+  },
+  "roof": {
+    "Gem": 1388,
+    "Ring": 1189,
+    "Antenna": 1398,
+    "Pipes": 1580
+  },
+  "base": {
+    "Plain": 2116,
+    "LED Strip": 1916,
+    "Hazard": 1523
+  }
+}

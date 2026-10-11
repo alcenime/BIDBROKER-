@@ -1,0 +1,34 @@
+{
+  "name": "Miner #4600",
+  "image": "4600.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Rig"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Steel"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "White"
+    },
+    {
+      "trait_type": "Left",
+      "value": "Fans"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Grid"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Antenna"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Plain"
+    }
+  ]
+}

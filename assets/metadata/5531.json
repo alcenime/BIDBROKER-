@@ -1,0 +1,34 @@
+{
+  "name": "Miner #5531",
+  "image": "5531.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Rig"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Rust"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "White"
+    },
+    {
+      "trait_type": "Left",
+      "value": "Fans"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Slats"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Pipes"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Plain"
+    }
+  ]
+}

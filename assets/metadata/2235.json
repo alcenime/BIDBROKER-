@@ -1,0 +1,34 @@
+{
+  "name": "Miner #2235",
+  "image": "2235.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Tower"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Gold"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Cyan"
+    },
+    {
+      "trait_type": "Left",
+      "value": "Vents"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Bars"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Ring"
+    },
+    {
+      "trait_type": "Base",
+      "value": "LED Strip"
+    }
+  ]
+}

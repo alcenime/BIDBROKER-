@@ -1,0 +1,34 @@
+{
+  "name": "Miner #723",
+  "image": "723.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Stack"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Violet"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Amber"
+    },
+    {
+      "trait_type": "Left",
+      "value": "Fans"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Slats"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Pipes"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Plain"
+    }
+  ]
+}

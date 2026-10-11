@@ -1,0 +1,34 @@
+{
+  "name": "Miner #1001",
+  "image": "1001.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Rig"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Gold"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Lime"
+    },
+    {
+      "trait_type": "Left",
+      "value": "Terminal"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Slats"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Gem"
+    },
+    {
+      "trait_type": "Base",
+      "value": "LED Strip"
+    }
+  ]
+}

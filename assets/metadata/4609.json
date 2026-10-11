@@ -1,0 +1,34 @@
+{
+  "name": "Miner #4609",
+  "image": "4609.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Stack"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Teal"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Magenta"
+    },
+    {
+      "trait_type": "Left",
+      "value": "LEDs"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Slats"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Gem"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Hazard"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "Miner #4584",
+  "image": "4584.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Stack"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Obsidian"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Lime"
+    },
+    {
+      "trait_type": "Left",
+      "value": "Fans"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Grid"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Gem"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Hazard"
+    }
+  ]
+}

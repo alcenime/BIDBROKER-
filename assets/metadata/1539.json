@@ -1,0 +1,34 @@
+{
+  "name": "Miner #1539",
+  "image": "1539.png",
+  "attributes": [
+    {
+      "trait_type": "Shape",
+      "value": "Rig"
+    },
+    {
+      "trait_type": "Palette",
+      "value": "Obsidian"
+    },
+    {
+      "trait_type": "Accent",
+      "value": "Cyan"
+    },
+    {
+      "trait_type": "Left",
+      "value": "Terminal"
+    },
+    {
+      "trait_type": "Right",
+      "value": "Fans"
+    },
+    {
+      "trait_type": "Roof",
+      "value": "Gem"
+    },
+    {
+      "trait_type": "Base",
+      "value": "LED Strip"
+    }
+  ]
+}
