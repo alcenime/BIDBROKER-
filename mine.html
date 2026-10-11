@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BIDBROKER — Mine</title>
+<style>
+:root{
+  --bg:#0c0d0b; --panel:#131411; --panel-2:#181a16; --border:#23251f; --border-2:#2e3129;
+  --text:#f4f5f1; --muted:#8b9084; --lime:#c8ff00; --lime-dim:rgba(200,255,0,.1);
+  --ok:#c8ff00; --warn:#e6b44c; --err:#ff6b5e;
+  --r:12px; --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --sidebar:248px;
+  --font:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5;min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input{font:inherit;color:inherit}
+svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+:focus-visible{outline:2px solid var(--lime);outline-offset:2px;border-radius:6px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Layout (same as index.html) */
+.app{display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:var(--s5) var(--s4);border-right:1px solid var(--border);background:var(--bg);overflow-y:auto}
+.brand{display:flex;align-items:center;gap:var(--s3);padding:0 var(--s2) var(--s5)}
+.brand-mark{width:28px;height:28px;flex:none;background:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjIxNyAyMjIgODE5IDc5OCIgd2lkdGg9IjgxOSIgaGVpZ2h0PSI3OTgiPgo8ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMjE3IiB5MT0iMjIyIiB4Mj0iMTAzNiIgeTI9IjEwMjAiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI0YwRkYxRSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzk4RkYwMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8cmVjdCB4PSIyMTciIHk9IjIyMiIgd2lkdGg9IjgxOSIgaGVpZ2h0PSI3OTgiIHJ4PSIxNjUiIHJ5PSIxNjUiIGZpbGw9InVybCgjZykiLz4KPHBhdGggZD0iTTM0OS4wLDkwNC42QzM0OS4wLDkwMy42IDM1Ni4xLDg4Mi40IDM3MS41LDgzNy41QzM3Ny45LDgxOC44IDM5MC4wLDc4My4zIDM5OC40LDc1OC42TDQxMy42LDcxMy44TDQ0Mi45LDY4Ny44QzQ1OS4wLDY3My41IDQ3Mi4wLDY2MS43IDQ3MS44LDY2MS41QzQ3MS42LDY2MS4zIDQ1Ny4xLDY2My44IDQzOS42LDY2Ny4xQzQyMi4wLDY3MC4zIDQwNy40LDY3Mi43IDQwNy4xLDY3Mi40QzQwNi4zLDY3MS42IDQwNS45LDU4MS43IDQwNi43LDU2Mi44TDQwNy4zLDU0Ny4wTDQ2Ni45LDU0Ny4wTDUyNi41LDU0Ny4xTDU0MS41LDU2MC43QzU0OS44LDU2OC4yIDU2Ni4xLDU4My4wIDU3Ny45LDU5My43TDU5OS4yLDYxMy4yTDYwMS45LDYxMC43QzYwMy4zLDYwOS40IDYxNC4zLDU5OS4xIDYyNi4zLDU4Ny44QzY1Mi4yLDU2My40IDY0My43LDU2Ni4wIDY5NS42LDU2Ni4wTDczMi43LDU2Ni4wTDc0Ny40LDU1My40Qzc2NC45LDUzOC41IDc2Ni41LDUzNi4wIDc2Ni41LDUyNC4wQzc2Ni40LDUwOC40IDc1NC43LDQ5NS4yIDczOC4xLDQ5Mi4wQzczNC42LDQ5MS40IDY3My42LDQ5MS4wIDU2My4xLDQ5MS4wTDM5My41LDQ5MS4wTDM3OS42LDQ2MC4yQzM3MS45LDQ0My4zIDM2MC41LDQxOC41IDM1NC4yLDQwNS4wQzM0Ny45LDM5MS41IDM0MS41LDM3Ny43IDMzOS45LDM3NC4yTDMzNy4xLDM2OC4wTDU1Ni44LDM2OC4zQzgwMC4wLDM2OC42IDc4MC44LDM2OC4xIDgwMy4yLDM3NS4wQzg0My43LDM4Ny41IDg3Ny44LDQyMi40IDg4OC40LDQ2Mi4wQzkwMS43LDUxMS43IDg4MS42LDU2Mi41IDgzNi44LDU5Mi4wQzgzMS44LDU5NS4zIDgyNy4zLDU5OC4wIDgyNi44LDU5OC4wQzgyNC44LDU5OC4wIDgyNi4zLDU5OS45IDgyOS4yLDYwMS4xQzgzMS4wLDYwMS44IDgzNi4zLDYwNC45IDg0MS4wLDYwOC4wQzkwNS4yLDY1MC4zIDkyMS4wLDczNy4xIDg3NS45LDgwMC4zQzg1Ni4wLDgyOC4zIDgyNS41LDg0Ny44IDc4OC41LDg1Ni4xTDc3OC41LDg1OC40TDYzOS4wLDg1OC43QzU2Mi4zLDg1OC45IDQ5MS43LDg1OC45IDQ4Mi4yLDg1OC44TDQ2NC44LDg1OC41TDQ3Ni43LDg0OC4wQzQ4My4yLDg0Mi4yIDUwMi40LDgyNS4xIDUxOS41LDgxMC4xQzUzNi41LDc5NS4wIDU1My44LDc3OS43IDU1Ny45LDc3Ni4xQzU2Mi4wLDc3Mi41IDU3My45LDc2Mi4wIDU4NC4zLDc1Mi44TDYwMy4zLDczNi4wTDY2OC40LDczNi4wQzc0MC4yLDczNi4wIDc0MC43LDczNi4wIDc1MC4yLDcyOS45Qzc3NS4zLDcxMy44IDc3Mi40LDY3Ni45IDc0NS4yLDY2NC4yTDczOS41LDY2MS41TDY5NC44LDY2MS4wTDY1MC4wLDY2MC41TDYyNS45LDYzOC4wQzYxMi42LDYyNS42IDYwMS4xLDYxNS4xIDYwMC4zLDYxNC43QzU5OS4zLDYxNC4xIDU5NS4yLDYxNy4zIDU4NS43LDYyNi4zQzU3OC40LDYzMy4xIDU2Ny4wLDY0My44IDU2MC4yLDY0OS45TDU0OC4wLDY2MS4yTDU0OC4wLDY5MS44TDU0OC4wLDcyMi41TDUxNi4zLDc1MS41QzQ5OC45LDc2Ny41IDQ2Ni44LDc5Ni45IDQ0NS4wLDgxNy4wQzQyMy4zLDgzNy4xIDM5NC4yLDg2My44IDM4MC41LDg3Ni40QzM2Ni43LDg4OS4wIDM1NC4wLDkwMC43IDM1Mi4yLDkwMi40QzM1MC41LDkwNC4wIDM0OS4wLDkwNS4wIDM0OS4wLDkwNC42WiIgZmlsbD0iIzA1MDUwNSIgZmlsbC1ydWxlPSJldmVub2RkIi8+Cjwvc3ZnPg==") center/contain no-repeat}
+.brand-mark svg{width:16px;height:16px;stroke-width:2.5}
+.wordmark{font-weight:700;letter-spacing:.14em;font-size:15px}
+.nav-group{margin-bottom:var(--s5)}
+.nav-label{font-size:11px;letter-spacing:.12em;color:var(--muted);padding:0 var(--s3);margin-bottom:var(--s2);font-weight:600}
+.nav-list{list-style:none;display:grid;gap:2px}
+.nav-item{display:flex;align-items:center;gap:var(--s3);width:100%;padding:9px var(--s3);border-radius:10px;color:var(--muted);position:relative;text-align:left;transition:background .15s,color .15s}
+.nav-item:hover{background:var(--panel);color:var(--text)}
+.nav-item[aria-current="page"]{background:var(--lime-dim);color:var(--lime)}
+.nav-item[aria-current="page"]::before{content:"";position:absolute;left:-16px;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--lime)}
+.sidebar-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding:var(--s3);border:1px solid var(--border);border-radius:var(--r);background:var(--panel)}
+.net{display:flex;align-items:center;gap:var(--s2);font-size:12.5px}
+.net small{display:block;color:var(--muted);font-size:11px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px var(--lime-dim);flex:none}
+.icon-btn{width:32px;height:32px;display:grid;place-items:center;border-radius:8px;color:var(--muted)}
+.icon-btn:hover{background:var(--panel-2);color:var(--text)}
+.nav-item.soon{color:var(--muted);gap:var(--s2);cursor:default;opacity:.75}
+.nav-item.soon:hover{background:transparent;color:var(--muted)}
+.soon-name{white-space:nowrap}
+.v2{font-size:10px;color:var(--muted);border:1px solid var(--border-2);border-radius:5px;padding:0 4px;margin-left:2px;vertical-align:1px}
+.soon-badge{margin-left:auto;white-space:nowrap;font-size:9.5px;letter-spacing:.06em;font-weight:700;color:var(--lime);border:1px solid var(--border-2);border-radius:999px;padding:2px 7px}
+
+/* Main */
+.main{padding:var(--s5) var(--s6) var(--s6);display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s5);align-content:start;min-width:0;max-width:1280px;width:100%}
+.topbar{display:flex;align-items:center;justify-content:flex-end;gap:var(--s4);flex-wrap:wrap}
+.topbar h1{font-size:22px;font-weight:650;letter-spacing:-.01em}
+.topbar p{color:var(--muted);font-size:13px}
+.top-actions{display:flex;align-items:center;gap:var(--s3)}
+.badge{display:inline-flex;align-items:center;gap:var(--s2);padding:6px 10px;border:1px solid var(--border-2);border-radius:999px;font-size:12px;color:var(--text);background:var(--panel)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);padding:9px 16px;border-radius:10px;font-weight:600;font-size:13px;transition:background .15s,border-color .15s,color .15s}
+.btn-primary{background:var(--lime);color:#0c0d0b}
+.btn-primary:hover{background:#d6ff3a}
+.btn-primary:disabled{background:var(--panel-2);color:var(--muted);cursor:not-allowed}
+.btn-ghost{border:1px solid var(--border-2);background:var(--panel)}
+.btn-ghost:hover{border-color:var(--lime);color:var(--lime)}
+.btn-ghost:disabled{opacity:.5;cursor:not-allowed}
+.btn-ghost:disabled:hover{border-color:var(--border-2);color:inherit}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r)}
+.muted{color:var(--muted)}
+.mono{font-family:var(--mono);font-size:13px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:420px}
+th{text-align:left;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:var(--s2) var(--s5);border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:var(--s3) var(--s5);border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--panel-2)}
+th.r,td.r{text-align:right}
+.amt{color:var(--lime);font-variant-numeric:tabular-nums}
+.you{font-size:10px;letter-spacing:.06em;font-weight:700;color:#0c0d0b;background:var(--lime);border-radius:5px;padding:1px 6px;margin-left:6px}
+.lead-row td{background:var(--lime-dim)}
+
+/* Stats */
+.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s4)}
+.stat{padding:var(--s4) var(--s5);min-width:0}
+.stat-head{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:12.5px;margin-bottom:var(--s3);gap:var(--s2)}
+.stat-icon{width:30px;height:30px;border-radius:8px;border:1px solid var(--border-2);display:grid;place-items:center;color:var(--lime);flex:none}
+.stat-icon svg{width:16px;height:16px}
+.stat-value{font-size:24px;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat-sub{color:var(--muted);font-size:12px;margin-top:2px}
+
+/* Sections */
+.section{padding:var(--s5)}
+.sec-head{margin-bottom:var(--s5)}
+.sec-head h2{font-size:18px;font-weight:650;letter-spacing:-.01em}
+.sec-head p{color:var(--muted);font-size:13px;margin-top:2px}
+
+/* Slots */
+.slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s4)}
+.slot{display:flex;flex-direction:column;gap:var(--s3);padding:var(--s4);border:1px solid var(--border);border-radius:var(--r);background:var(--panel-2);min-width:0}
+.slot-top{display:flex;align-items:center;justify-content:space-between;gap:var(--s2)}
+.slot-no{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--lime)}
+.slot-art{aspect-ratio:1/1;border:1px dashed var(--border-2);border-radius:10px;background:var(--bg);display:grid;place-items:center;color:var(--muted)}
+.slot-art svg{width:34px;height:34px;stroke-width:1.5}
+.slot-body{display:grid;gap:2px;flex:1;align-content:start}
+.slot-body strong{font-size:14px;font-weight:650}
+.slot-body span{color:var(--muted);font-size:12.5px;line-height:1.45}
+.slot .btn{width:100%}
+
+/* Boost + claim */
+.split{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:var(--s5);align-items:stretch}
+.split>*{min-width:0}
+.boost-track{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding-top:var(--s2)}
+.boost-track::before{content:"";position:absolute;left:12.5%;right:12.5%;top:calc(var(--s2) + 31px);height:2px;background:var(--border-2)}
+.level{position:relative;display:grid;justify-items:center;gap:var(--s2);text-align:center}
+.hex{width:64px;height:72px;display:grid;place-items:center;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:var(--border-2);position:relative}
+.hex::before{content:"";position:absolute;inset:1px;clip-path:inherit;background:var(--panel-2)}
+.hex b{position:relative;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text)}
+.level small{color:var(--muted);font-size:12.5px}
+.level-pw{font-size:11px;letter-spacing:.08em;color:var(--lime);font-weight:700}
+.note-line{font-size:11.5px;color:var(--muted);margin-top:var(--s5)}
+.claim{display:flex;flex-direction:column;gap:var(--s4)}
+.claim-amt{display:flex;align-items:center;gap:var(--s3);padding:var(--s4);border:1px solid var(--border);border-radius:10px;background:var(--panel-2)}
+.claim-amt .stat-icon{width:38px;height:38px;border-radius:10px}
+.claim-amt img{width:44px;height:44px;flex:none;display:block}
+.claim-amt span{display:block;color:var(--muted);font-size:12px}
+.claim-amt strong{font-size:22px;font-weight:650;font-variant-numeric:tabular-nums}
+.claim .btn{width:100%;padding:12px 16px;font-size:14px;margin-top:auto}
+
+/* Reward history */
+.hist-card{padding:var(--s5) 0 0;overflow:hidden}
+.hist-card .sec-head{padding:0 var(--s5)}
+.empty{text-align:center;padding:var(--s6) var(--s5)!important;white-space:normal!important}
+.empty strong{display:block;font-size:14px;font-weight:650}
+.empty span{color:var(--muted);font-size:13px}
+tbody tr.ph:hover{background:transparent}
+
+.footer{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1.3fr);gap:var(--s5) var(--s6);align-items:start;padding-top:var(--s5);border-top:1px solid var(--border);color:var(--muted);font-size:12.5px}
+.footer>*{min-width:0}
+.footer-brand{display:grid;gap:var(--s3);justify-items:start}
+.footer-copy{color:var(--muted);font-size:12.5px}
+.footer-nav{display:flex;gap:var(--s2) var(--s5);align-items:center;flex-wrap:wrap}
+.footer-res{min-width:0}
+.res-links{list-style:none;display:flex;flex-wrap:wrap;gap:0 var(--s5)}
+.footer .link{display:inline-flex;align-items:center;min-height:32px;padding:0;font:inherit;font-size:12.5px;color:var(--muted);text-align:left}
+.footer .link:hover{color:var(--lime)}
+.footer .badge{white-space:nowrap}
+@media (max-width:1000px){
+  .footer{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .footer-res{grid-column:1 / -1}
+}
+@media (max-width:560px){
+  .footer{grid-template-columns:minmax(0,1fr);gap:var(--s3);padding-top:var(--s4)}
+  .footer-brand{gap:var(--s1)}
+  .footer-nav{gap:0 var(--s4);min-height:36px}
+  .footer-nav .link{min-height:36px}
+  .res-links{gap:0 var(--s4)}
+  .res-links .link{min-height:36px;min-width:28px}
+}
+.content{min-width:0}
+.foot-wrap{max-width:1280px;width:100%;padding:var(--s5) var(--s6) var(--s6)}
+@media (max-width:760px){.foot-wrap{padding:var(--s4) var(--s4) var(--s5)}}
+
+/* Mobile nav (same as index.html) */
+.mobile-bar{display:none}
+@media (max-width:1100px){
+  :root{--sidebar:210px}
+  .main{padding:var(--s5)}
+  .grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .slots{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:980px){
+  .split{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:820px){
+  .app{display:block}
+  .sidebar{display:none;position:fixed;inset:0 auto 0 0;width:260px;z-index:30;box-shadow:20px 0 40px rgba(0,0,0,.5)}
+  .sidebar.open{display:flex;height:100dvh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .sidebar>*{flex-shrink:0}
+  .scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20}
+  .scrim.open{display:block}
+  .mobile-bar{display:flex;align-items:center;justify-content:space-between;padding:var(--s3) var(--s4);border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10}
+  .main{padding:var(--s4)}
+  .top-actions{display:none}
+  .mobile-actions{display:flex;align-items:center;gap:var(--s2)}
+  .mobile-wallet{padding:7px 12px;min-height:36px;font-size:12.5px}
+}
+@media (max-width:520px){
+  .grid-4{gap:var(--s3)}
+  .stat{padding:var(--s3) var(--s4)}
+  .stat-value{font-size:20px}
+  .section{padding:var(--s4)}
+  .hist-card{padding-top:var(--s4)}
+  .hist-card .sec-head{padding:0 var(--s4)}
+  .slots{gap:var(--s3)}
+  .slot{padding:var(--s3)}
+  .boost-track::before{top:calc(var(--s2) + 25px)}
+  .hex{width:52px;height:58px}
+  .hex b{font-size:15px}
+  th,td{padding-left:var(--s4);padding-right:var(--s4)}
+}
+@media (max-width:340px){
+  .slots{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ===== Page tabs (Mine / My Miners) ===== */
+.tabs{display:flex;gap:var(--s1);padding:var(--s1);border:1px solid var(--border);border-radius:12px;background:var(--panel);width:fit-content;max-width:100%}
+.tab{padding:9px 20px;border-radius:9px;color:var(--muted);font-weight:600;font-size:13.5px;white-space:nowrap;transition:background .15s,color .15s}
+.tab:hover{color:var(--text)}
+.tab[aria-selected="true"]{background:var(--lime-dim);color:var(--lime)}
+.tab-panel{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s5);min-width:0}
+.tab-panel[hidden]{display:none}
+@media (max-width:520px){.tabs{display:grid;grid-template-columns:1fr 1fr;width:100%}.tab{text-align:center;padding:10px 12px}}
+/* ===== My Miners ===== */
+.owned-bar{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);flex-wrap:wrap;padding:var(--s4) var(--s5)}
+.owned-bar .lab{color:var(--muted);font-size:12.5px;letter-spacing:.04em;font-weight:600}
+.owned-bar .val{font-size:28px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.2}
+.owned-bar .sub{color:var(--muted);font-size:12.5px}
+.state{display:grid;justify-items:center;gap:var(--s3);text-align:center;padding:var(--s6) var(--s4);border:1px dashed var(--border-2);border-radius:var(--r);background:var(--panel-2)}
+.state[hidden]{display:none}
+.state .st-ico{width:44px;height:44px;border-radius:10px;border:1px solid var(--border-2);display:grid;place-items:center;color:var(--lime);background:var(--bg)}
+.state .st-ico svg{width:22px;height:22px}
+.state h3{font-size:17px;font-weight:650;letter-spacing:-.01em}
+.state p{color:var(--muted);font-size:13.5px;max-width:44ch}
+.state .btn{margin-top:var(--s2)}
+.owned-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s4)}
+.owned-grid[hidden]{display:none}
+.own{display:flex;flex-direction:column;gap:var(--s3);padding:var(--s3);border:1px solid var(--border);border-radius:var(--r);background:var(--panel-2);min-width:0;transition:border-color .15s}
+.own:hover{border-color:var(--border-2)}
+.o-art{position:relative;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:var(--bg);border:1px solid var(--border)}
+.o-art img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:pixelated}
+.o-ph{width:100%;height:100%;display:grid;place-items:center;background-color:#0a1020;background-image:linear-gradient(45deg,rgba(255,255,255,.04) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.04) 75%),linear-gradient(45deg,rgba(255,255,255,.04) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.04) 75%);background-size:16px 16px;background-position:0 0,8px 8px}
+.o-ph span{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--muted);border:1px dashed var(--border-2);padding:4px 8px;background:var(--bg)}
+.o-top{min-height:26px;display:flex;align-items:center;justify-content:space-between;gap:var(--s2);flex-wrap:wrap}
+.o-id{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--lime)}
+.o-status{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--muted);border:1px solid var(--border-2);border-radius:999px;padding:2px 9px;white-space:nowrap}
+.o-status.on{color:var(--lime);border-color:rgba(200,255,0,.35);background:var(--lime-dim)}
+.o-status i{width:6px;height:6px;border-radius:50%;background:currentColor}
+.o-name{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.own .btn{width:100%;padding:8px 12px;margin-top:auto}
+
+.o-back{position:fixed;inset:0;z-index:50;background:rgba(4,6,4,.78);display:flex;align-items:center;justify-content:center;padding:var(--s4)}
+.o-back[hidden]{display:none}
+.o-modal{position:relative;width:100%;max-width:720px;max-height:calc(100dvh - 32px);overflow-y:auto;background:var(--panel);border:1px solid var(--border-2);border-radius:var(--r);padding:var(--s5);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s5);align-items:start}
+.o-info{display:grid;gap:var(--s4);align-content:start;min-width:0;padding-right:36px}
+.o-info h2{font-size:20px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;line-height:1.2}
+.o-rows{border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.o-row{display:flex;justify-content:space-between;align-items:center;gap:var(--s3);padding:10px var(--s4);border-bottom:1px solid var(--border);font-size:13px}
+.o-row:last-child{border-bottom:0}
+.o-row dt{color:var(--muted)}
+.o-row dd{font-weight:600}
+.o-close{position:absolute;top:12px;right:12px;width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--border-2);border-radius:8px;color:var(--muted);background:var(--panel);z-index:2}
+.o-close:hover{color:var(--lime);border-color:var(--lime)}
+@media (max-width:1100px){.owned-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:640px){
+  .o-modal{grid-template-columns:minmax(0,1fr);padding:var(--s4);gap:var(--s4)}
+  .o-modal .o-art{max-width:300px;width:100%;justify-self:center}
+  .o-info{padding-right:0}
+  .o-info h2{padding-right:40px}
+}
+@media (max-width:560px){
+  .owned-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3)}
+  .owned-bar{padding:var(--s3) var(--s4)}
+  .own{padding:var(--s2)}
+  .o-id{font-size:12px}
+  .o-status{font-size:10.5px;padding:2px 7px}
+  .o-name{font-size:12px;letter-spacing:.03em}
+}
+@media (max-width:340px){.owned-grid{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="mobile-bar">
+  <div class="brand" style="padding:0">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="wordmark">BIDBROKER</span>
+  </div>
+  <div class="mobile-actions">
+    <button class="btn btn-primary mobile-wallet" type="button">Connect Wallet</button>
+    <button class="icon-btn" id="menuBtn" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</div>
+<div class="scrim" id="scrim"></div>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar" aria-label="Primary">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="wordmark">BIDBROKER</span>
+    </div>
+
+    <nav>
+      <div class="nav-group">
+        <p class="nav-label">WORKSPACE</p>
+        <ul class="nav-list">
+          <li><a class="nav-item" href="index.html"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Home</a></li>
+          <li><a class="nav-item" href="bid.html"><svg viewBox="0 0 24 24"><path d="M14 4l6 6-3 3-6-6zM11 7L4 14l3 3 7-7M3 21h8"/></svg>Bid</a></li>
+          <li><a class="nav-item" href="mine.html" aria-current="page"><svg viewBox="0 0 24 24"><path d="M14 4l-2 6 5 2-7 8 1-7-5-2z"/></svg>Mine</a></li>
+        </ul>
+      </div>
+      <div class="nav-group">
+        <p class="nav-label">ECOSYSTEM</p>
+        <ul class="nav-list">
+          <li><a class="nav-item" href="leaderboard.html"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></svg>Leaderboard</a></li>
+          <li><a class="nav-item" href="token.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9.5h4.5a1.8 1.8 0 0 1 0 3.5H9m0 0h5a1.8 1.8 0 0 1 0 3.5H9M9 7v10"/></svg>Token</a></li>
+          <li><a class="nav-item" href="collection.html"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9zM4 7.5l8 4.5 8-4.5M12 12v9"/></svg>Collection</a></li>
+        </ul>
+      </div>
+          <div class="nav-group">
+        <p class="nav-label">LABS</p>
+        <ul class="nav-list">
+          <li><button class="nav-item soon" type="button" aria-disabled="true"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2h12.4a1.5 1.5 0 0 0 1.3-2L14 9V3M7.5 14h9"/></svg><span class="soon-name">Labs <span class="v2">V2</span></span><span class="soon-badge">COMING SOON</span></button></li>
+        </ul>
+      </div>
+      <div class="nav-group">
+        <p class="nav-label">RESOURCES</p>
+        <ul class="nav-list">
+          <li><a class="nav-item" href="docs.html"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6"/></svg>Docs</a></li>
+          <li><a class="nav-item" href="resources.html#terms" data-res="terms"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6zM9 12l2 2 4-4"/></svg>Terms of Service</a></li>
+          <li><a class="nav-item" href="resources.html#privacy" data-res="privacy"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Privacy Policy</a></li>
+          <li><a class="nav-item" href="https://x.com/bidbrokerRH" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M4 4l7.5 10L4 20h2l6.4-5.4L17 20h3l-7.9-10.5L19.2 4h-2l-5.7 4.9L7 4z"/></svg>X</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="net"><span class="dot" aria-hidden="true"></span><div>Robinhood Chain<small>Network</small></div></div>
+      <button class="icon-btn" type="button" aria-label="Settings (placeholder)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+    </div>
+  </aside>
+
+<div class="content">
+  <main class="main">
+    <header class="topbar">
+      <div class="top-actions">
+        <span class="badge"><span class="dot" aria-hidden="true"></span>Robinhood Chain</span>
+        <button class="btn btn-primary js-wallet" type="button">Connect Wallet</button>
+      </div>
+    </header>
+    <div class="tabs" role="tablist" aria-label="Mine sections">
+      <button class="tab" role="tab" type="button" id="tab-mine" aria-controls="panel-mine" aria-selected="true" data-tab="mine">Mine</button>
+      <button class="tab" role="tab" type="button" id="tab-miners" aria-controls="panel-miners" aria-selected="false" tabindex="-1" data-tab="my-miners">My Miners</button>
+    </div>
+
+    <div class="tab-panel" id="panel-mine" role="tabpanel" aria-labelledby="tab-mine">
+
+    <section class="grid-4" aria-label="Mining statistics">
+      <article class="card stat">
+        <div class="stat-head"><span>Total ETH Earned</span><span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l6 10-6 4-6-4zM6 14l6 8 6-8-6 3.5z"/></svg></span></div>
+        <div class="stat-value">— ETH</div>
+        <div class="stat-sub">Lifetime rewards from mining</div>
+      </article>
+      <article class="card stat">
+        <div class="stat-head"><span>Claimable ETH</span><span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span></div>
+        <div class="stat-value">— ETH</div>
+        <div class="stat-sub">Available to claim</div>
+      </article>
+      <article class="card stat">
+        <div class="stat-head"><span>Mining Speed</span><span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 11l7-7 7 7M5 20l7-7 7 7"/></svg></span></div>
+        <div class="stat-value">—×</div>
+        <div class="stat-sub">Current boost multiplier</div>
+      </article>
+      <article class="card stat">
+        <div class="stat-head"><span>Active Miners</span><span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.2a3 3 0 0 1 0 5.6M18 14.3c1.8.8 3 2.6 3 5.7"/></svg></span></div>
+        <div class="stat-value">— / 4</div>
+        <div class="stat-sub">Mining slots in use</div>
+      </article>
+    </section>
+
+    <section class="card section" aria-labelledby="slots-h">
+      <div class="sec-head">
+        <h2 id="slots-h">Your Mining Slots</h2>
+        <p>Select up to 4 Miner NFTs to activate mining. More miners increase your boost.</p>
+      </div>
+      <div class="slots">
+        <article class="slot" aria-label="Slot 1">
+          <div class="slot-top"><span class="slot-no">SLOT 1</span></div>
+          <div class="slot-art" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+          <div class="slot-body"><strong>Empty Slot</strong><span>Select a Miner NFT to start mining.</span></div>
+          <button class="btn btn-ghost" type="button">Select Miner</button>
+        </article>
+        <article class="slot" aria-label="Slot 2">
+          <div class="slot-top"><span class="slot-no">SLOT 2</span></div>
+          <div class="slot-art" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+          <div class="slot-body"><strong>Empty Slot</strong><span>Select a Miner NFT to start mining.</span></div>
+          <button class="btn btn-ghost" type="button">Select Miner</button>
+        </article>
+        <article class="slot" aria-label="Slot 3">
+          <div class="slot-top"><span class="slot-no">SLOT 3</span></div>
+          <div class="slot-art" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+          <div class="slot-body"><strong>Empty Slot</strong><span>Select a Miner NFT to start mining.</span></div>
+          <button class="btn btn-ghost" type="button">Select Miner</button>
+        </article>
+        <article class="slot" aria-label="Slot 4">
+          <div class="slot-top"><span class="slot-no">SLOT 4</span></div>
+          <div class="slot-art" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+          <div class="slot-body"><strong>Empty Slot</strong><span>Select a Miner NFT to start mining.</span></div>
+          <button class="btn btn-ghost" type="button">Select Miner</button>
+        </article>
+      </div>
+    </section>
+
+    <div class="split">
+      <section class="card section" aria-labelledby="boost-h">
+        <div class="sec-head">
+          <h2 id="boost-h">Mining Boost</h2>
+          <p>Your total boost depends on the number of active miners.</p>
+        </div>
+        <div class="boost-track" role="list" aria-label="Boost levels">
+          <div class="level"><div class="hex"><b>1×</b></div><small>1 NFT</small></div>
+          <div class="level"><div class="hex"><b>2×</b></div><small>2 NFTs</small></div>
+          <div class="level"><div class="hex"><b>3×</b></div><small>3 NFTs</small></div>
+          <div class="level"><div class="hex"><b>5×</b></div><small>4 NFTs</small></div>
+        </div>
+        <p class="note-line">Boost levels shown for reference. Your current level appears once your wallet and miners are connected.</p>
+      </section>
+
+      <section class="card section claim" aria-labelledby="claim-h">
+        <div class="sec-head" style="margin-bottom:0">
+          <h2 id="claim-h">Claim Rewards</h2>
+          <p>Claim your earned ETH from mining rewards.</p>
+        </div>
+        <div class="claim-amt">
+          <img src="data:image/png;base64,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" alt="ETH" width="44" height="44">
+          <div><span>Claimable amount</span><strong>— ETH</strong></div>
+        </div>
+        <button class="btn btn-primary" type="button" disabled>Claim ETH</button>
+      </section>
+    </div>
+
+    <section class="card hist-card" aria-labelledby="hist-h">
+      <div class="sec-head">
+        <h2 id="hist-h">Reward History</h2>
+        <p>History of your mining rewards and claims.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Type</th><th scope="col" class="r">Amount</th><th scope="col" class="r">Time</th></tr></thead>
+          <tbody><tr class="ph"><td colspan="3" class="empty"><strong>No reward history yet.</strong><span>Start mining to earn ETH rewards.</span></td></tr></tbody>
+        </table>
+      </div>
+    </section>
+    </div>
+
+    <div class="tab-panel" id="panel-miners" role="tabpanel" aria-labelledby="tab-miners" hidden>
+    <section class="card owned-bar" aria-label="Total Miner NFTs owned">
+      <div>
+        <div class="lab">MINER NFTs OWNED</div>
+        <div class="val" id="ownedTotal" aria-live="polite">—</div>
+      </div>
+      <div class="sub" id="ownedSub">Connect your wallet to see your total.</div>
+    </section>
+
+    <section class="card section" aria-labelledby="fleet-h">
+      <div class="sec-head">
+        <h2 id="fleet-h">Your Miners</h2>
+        <p>Every Miner NFT held by your connected wallet, whether or not it is currently mining.</p>
+      </div>
+
+      <!-- State 1: wallet not connected -->
+      <div class="state" id="stNoWallet">
+        <p>Connect your wallet to view your Miner NFTs.</p>
+        <button class="btn btn-primary js-wallet" type="button">Connect Wallet</button>
+      </div>
+
+      <!-- State 2: wallet connected, collection / ownership data not available yet -->
+      <div class="state" id="stNoCollection" hidden>
+        <span class="st-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9zM4 7.5l8 4.5 8-4.5M12 12v9"/></svg></span>
+        <h3>Your mining fleet starts here</h3>
+        <p>Your Miner NFTs will appear here once the collection is available.</p>
+      </div>
+
+      <!-- State 3: wallet connected, collection available, no Miner NFTs owned -->
+      <div class="state" id="stEmpty" hidden>
+        <p>You don't own any Miner NFTs yet.</p>
+        <a class="btn btn-primary" href="collection.html">Explore Collection</a>
+      </div>
+
+      <!-- State 4: owned Miner NFTs (cards are rendered by the script below) -->
+      <div class="owned-grid" id="ownedGrid" hidden></div>
+    </section>
+    </div>
+  </main>
+
+<!-- Miner details modal -->
+<div class="o-back" id="oModal" hidden>
+  <div class="o-modal" role="dialog" aria-modal="true" aria-labelledby="oName">
+    <button class="o-close" id="oClose" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="o-art" id="oArt"></div>
+    <div class="o-info">
+      <div>
+        <div class="o-id" id="oId"></div>
+        <h2 id="oName"></h2>
+      </div>
+      <dl class="o-rows" id="oRows"></dl>
+    </div>
+  </div>
+</div>
+
+<div class="foot-wrap">
+<footer class="footer">
+        <div class="footer-brand">
+          <a class="brand" href="index.html" aria-label="BIDBROKER home" style="padding:0"><span class="brand-mark" aria-hidden="true"></span><span class="wordmark">BIDBROKER</span></a>
+          <span class="footer-copy">&copy; 2026 BIDBROKER.</span>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a class="link" href="index.html#whitepaper">Whitepaper</a>
+          <span class="badge"><span class="dot" aria-hidden="true"></span>Robinhood Chain</span>
+        </nav>
+        <div class="footer-res">
+          <ul class="res-links">
+            <li><a class="link" href="docs.html">Docs</a></li>
+            <li><a class="link" href="resources.html#terms">Terms of Service</a></li>
+            <li><a class="link" href="resources.html#privacy">Privacy Policy</a></li>
+            <li><a class="link" href="resources.html#legal">Legal</a></li>
+            <li><a class="link" href="https://x.com/bidbrokerRH" target="_blank" rel="noopener noreferrer">X</a></li>
+          </ul>
+        </div>
+      </footer>
+</div>
+</div>
+</div>
+
+<script>
+  // Mobile navigation toggle (same behavior as index.html)
+  (function () {
+    var btn = document.getElementById('menuBtn');
+    var sidebar = document.getElementById('sidebar');
+    var scrim = document.getElementById('scrim');
+    function set(open) {
+      sidebar.classList.toggle('open', open);
+      scrim.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    }
+    btn.addEventListener('click', function () { set(!sidebar.classList.contains('open')); });
+    scrim.addEventListener('click', function () { set(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  })();
+</script>
+<script>
+(function () {
+  /* =====================================================================
+     INTEGRATION — My Miners
+     ---------------------------------------------------------------------
+     Halaman ini TIDAK memuat data NFT bawaan dan tidak mengarang apa pun.
+     Status default untuk wallet yang terhubung = "koleksi belum tersedia".
+
+     Saat kontrak koleksi + pembacaan kepemilikan sudah siap, panggil:
+
+       window.BBMyMiners.setOwned(list)
+
+       list = null          -> data kepemilikan belum tersedia (default)
+       list = []            -> sudah diverifikasi, wallet tidak punya Miner NFT
+       list = [{ id: 12,                            // token ID (wajib)
+                 name: "BIDBROKER MINER",           // opsional
+                 image: "assets/miners/miner-0012.png", // opsional
+                 mining: true }]                    // true | false, HILANGKAN kalau belum terverifikasi
+
+     Dengarkan perubahan akun lewat:
+       document.addEventListener('bbwallet:change', e => e.detail.address)
+     Setiap wallet berganti / putus, daftar di-reset ke "belum tersedia"
+     sampai setOwned() dipanggil lagi untuk wallet yang baru.
+     ===================================================================== */
+  var DEFAULT_NAME = 'BIDBROKER MINER';
+  var address = null, owned = null;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var stNoWallet = $('stNoWallet'), stNoColl = $('stNoCollection'), stEmpty = $('stEmpty'),
+      gridEl = $('ownedGrid'), totalEl = $('ownedTotal'), subEl = $('ownedSub');
+
+  function idLabel(id) { var s = String(id); while (s.length < 4) s = '0' + s; return '#' + s; }
+
+  function placeholder() {
+    var d = document.createElement('div'); d.className = 'o-ph'; d.setAttribute('role', 'img'); d.setAttribute('aria-label', 'Image not available');
+    var s = document.createElement('span'); s.textContent = 'NO IMAGE'; d.appendChild(s); return d;
+  }
+  function artNode(src, alt) {
+    if (!src) return placeholder();
+    var img = new Image(); img.alt = alt; img.decoding = 'async';
+    img.addEventListener('error', function () { if (img.parentNode) img.parentNode.replaceChild(placeholder(), img); });
+    img.src = src; return img;
+  }
+
+  function statusNode(m) {
+    if (typeof m.mining !== 'boolean') return null; // hanya tampil kalau terverifikasi
+    var s = document.createElement('span'); s.className = 'o-status' + (m.mining ? ' on' : '');
+    s.appendChild(document.createElement('i'));
+    s.appendChild(document.createTextNode(m.mining ? 'Mining' : 'Not Mining'));
+    return s;
+  }
+
+  function card(m) {
+    var c = document.createElement('article'); c.className = 'own';
+    var art = document.createElement('div'); art.className = 'o-art'; art.appendChild(artNode(m.image, m.name + ' ' + idLabel(m.id))); c.appendChild(art);
+    var top = document.createElement('div'); top.className = 'o-top';
+    var id = document.createElement('span'); id.className = 'o-id'; id.textContent = idLabel(m.id); top.appendChild(id);
+    var st = statusNode(m); if (st) top.appendChild(st);
+    c.appendChild(top);
+    var nm = document.createElement('div'); nm.className = 'o-name'; nm.title = m.name; nm.textContent = m.name; c.appendChild(nm);
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'btn btn-ghost'; b.textContent = 'View Details';
+    b.setAttribute('data-id', String(m.id)); b.setAttribute('aria-label', 'View details for Miner ' + idLabel(m.id));
+    c.appendChild(b);
+    return c;
+  }
+
+  function render() {
+    var connected = !!address, verified = connected && owned !== null, count = verified ? owned.length : null;
+    stNoWallet.hidden = connected;
+    stNoColl.hidden = !(connected && owned === null);
+    stEmpty.hidden = !(verified && count === 0);
+    gridEl.hidden = !(verified && count > 0);
+
+    gridEl.textContent = '';
+    if (verified && count > 0) {
+      var frag = document.createDocumentFragment();
+      owned.forEach(function (m) { frag.appendChild(card(m)); });
+      gridEl.appendChild(frag);
+    }
+
+    totalEl.textContent = verified ? String(count) : '—';
+    subEl.textContent = !connected ? 'Connect your wallet to see your total.'
+      : (verified ? 'Verified from your connected wallet.' : 'Not available until the collection is live.');
+  }
+
+  function normalize(list) {
+    return list.map(function (m) {
+      return { id: Number(m && m.id), name: m && m.name ? String(m.name) : DEFAULT_NAME, image: m && m.image ? String(m.image) : '', mining: m ? m.mining : undefined };
+    }).filter(function (m) { return isFinite(m.id) && m.id >= 0; })
+      .sort(function (a, b) { return a.id - b.id; });
+  }
+
+  function setOwned(list) { owned = Array.isArray(list) ? normalize(list) : null; render(); }
+  function setConnected(a) {
+    a = a || null;
+    if (a === address) return;
+    address = a; owned = null; closeModal(); render();
+  }
+  window.BBMyMiners = { setOwned: setOwned };
+
+  document.addEventListener('bbwallet:change', function (e) { setConnected(e.detail && e.detail.address); });
+  if (window.bbWallet && window.bbWallet.address) setConnected(window.bbWallet.address);
+
+  // ---- Details modal ----
+  var modal = $('oModal'), closeBtn = $('oClose'), lastFocus = null;
+  function row(k, v) {
+    var r = document.createElement('div'); r.className = 'o-row';
+    var dt = document.createElement('dt'); dt.textContent = k; var dd = document.createElement('dd'); dd.textContent = v;
+    r.appendChild(dt); r.appendChild(dd); return r;
+  }
+  function openModal(id) {
+    var m = (owned || []).filter(function (x) { return x.id === id; })[0]; if (!m) return;
+    lastFocus = document.activeElement;
+    var art = $('oArt'); art.textContent = ''; art.appendChild(artNode(m.image, m.name + ' ' + idLabel(m.id)));
+    $('oId').textContent = idLabel(m.id); $('oName').textContent = m.name;
+    var rows = $('oRows'); rows.textContent = '';
+    rows.appendChild(row('Token ID', idLabel(m.id)));
+    if (typeof m.mining === 'boolean') rows.appendChild(row('Mining status', m.mining ? 'Mining' : 'Not Mining'));
+    modal.hidden = false; document.body.style.overflow = 'hidden'; closeBtn.focus();
+  }
+  function closeModal() {
+    if (modal.hidden) return;
+    modal.hidden = true; document.body.style.overflow = '';
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  gridEl.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-id]'); if (b) openModal(Number(b.getAttribute('data-id')));
+  });
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function (e) {
+    if (modal.hidden) return;
+    if (e.key === 'Escape') closeModal();
+    else if (e.key === 'Tab') { e.preventDefault(); closeBtn.focus(); }
+  });
+
+  render();
+})();
+</script>
+<script>
+(function () {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  var panels = { 'mine': document.getElementById('panel-mine'), 'my-miners': document.getElementById('panel-miners') };
+  var meta = {
+    'mine': ['BIDBROKER \u2014 Mine'],
+    'my-miners': ['BIDBROKER \u2014 My Miners']
+  };
+  function show(name, push) {
+    if (!panels[name]) name = 'mine';
+    tabs.forEach(function (t) {
+      var on = t.getAttribute('data-tab') === name;
+      t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1;
+    });
+    Object.keys(panels).forEach(function (k) { panels[k].hidden = (k !== name); });
+    document.title = meta[name][0];
+    if (push) history.replaceState(null, '', name === 'mine' ? location.pathname + location.search : '#my-miners');
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { show(t.getAttribute('data-tab'), true); });
+    t.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      var n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      n.focus(); show(n.getAttribute('data-tab'), true);
+    });
+  });
+  window.addEventListener('hashchange', function () { show(location.hash === '#my-miners' ? 'my-miners' : 'mine', false); });
+  show(location.hash === '#my-miners' ? 'my-miners' : 'mine', false);
+})();
+</script>
+<script type="module" src="wallet.js"></script>
+</body>
+</html>
