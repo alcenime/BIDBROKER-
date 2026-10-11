@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BIDBROKER — Home</title>
+<style>
+:root{
+  --bg:#0c0d0b; --panel:#131411; --panel-2:#181a16; --border:#23251f; --border-2:#2e3129;
+  --text:#f4f5f1; --muted:#8b9084; --lime:#c8ff00; --lime-dim:rgba(200,255,0,.1);
+  --ok:#c8ff00; --warn:#e6b44c;
+  --r:12px; --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --sidebar:248px;
+  --font:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5;min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+:focus-visible{outline:2px solid var(--lime);outline-offset:2px;border-radius:6px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Layout */
+.app{display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:var(--s5) var(--s4);border-right:1px solid var(--border);background:var(--bg)}
+.brand{display:flex;align-items:center;gap:var(--s3);padding:0 var(--s2) var(--s5)}
+.brand-mark{width:28px;height:28px;flex:none;background:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjIxNyAyMjIgODE5IDc5OCIgd2lkdGg9IjgxOSIgaGVpZ2h0PSI3OTgiPgo8ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMjE3IiB5MT0iMjIyIiB4Mj0iMTAzNiIgeTI9IjEwMjAiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI0YwRkYxRSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzk4RkYwMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8cmVjdCB4PSIyMTciIHk9IjIyMiIgd2lkdGg9IjgxOSIgaGVpZ2h0PSI3OTgiIHJ4PSIxNjUiIHJ5PSIxNjUiIGZpbGw9InVybCgjZykiLz4KPHBhdGggZD0iTTM0OS4wLDkwNC42QzM0OS4wLDkwMy42IDM1Ni4xLDg4Mi40IDM3MS41LDgzNy41QzM3Ny45LDgxOC44IDM5MC4wLDc4My4zIDM5OC40LDc1OC42TDQxMy42LDcxMy44TDQ0Mi45LDY4Ny44QzQ1OS4wLDY3My41IDQ3Mi4wLDY2MS43IDQ3MS44LDY2MS41QzQ3MS42LDY2MS4zIDQ1Ny4xLDY2My44IDQzOS42LDY2Ny4xQzQyMi4wLDY3MC4zIDQwNy40LDY3Mi43IDQwNy4xLDY3Mi40QzQwNi4zLDY3MS42IDQwNS45LDU4MS43IDQwNi43LDU2Mi44TDQwNy4zLDU0Ny4wTDQ2Ni45LDU0Ny4wTDUyNi41LDU0Ny4xTDU0MS41LDU2MC43QzU0OS44LDU2OC4yIDU2Ni4xLDU4My4wIDU3Ny45LDU5My43TDU5OS4yLDYxMy4yTDYwMS45LDYxMC43QzYwMy4zLDYwOS40IDYxNC4zLDU5OS4xIDYyNi4zLDU4Ny44QzY1Mi4yLDU2My40IDY0My43LDU2Ni4wIDY5NS42LDU2Ni4wTDczMi43LDU2Ni4wTDc0Ny40LDU1My40Qzc2NC45LDUzOC41IDc2Ni41LDUzNi4wIDc2Ni41LDUyNC4wQzc2Ni40LDUwOC40IDc1NC43LDQ5NS4yIDczOC4xLDQ5Mi4wQzczNC42LDQ5MS40IDY3My42LDQ5MS4wIDU2My4xLDQ5MS4wTDM5My41LDQ5MS4wTDM3OS42LDQ2MC4yQzM3MS45LDQ0My4zIDM2MC41LDQxOC41IDM1NC4yLDQwNS4wQzM0Ny45LDM5MS41IDM0MS41LDM3Ny43IDMzOS45LDM3NC4yTDMzNy4xLDM2OC4wTDU1Ni44LDM2OC4zQzgwMC4wLDM2OC42IDc4MC44LDM2OC4xIDgwMy4yLDM3NS4wQzg0My43LDM4Ny41IDg3Ny44LDQyMi40IDg4OC40LDQ2Mi4wQzkwMS43LDUxMS43IDg4MS42LDU2Mi41IDgzNi44LDU5Mi4wQzgzMS44LDU5NS4zIDgyNy4zLDU5OC4wIDgyNi44LDU5OC4wQzgyNC44LDU5OC4wIDgyNi4zLDU5OS45IDgyOS4yLDYwMS4xQzgzMS4wLDYwMS44IDgzNi4zLDYwNC45IDg0MS4wLDYwOC4wQzkwNS4yLDY1MC4zIDkyMS4wLDczNy4xIDg3NS45LDgwMC4zQzg1Ni4wLDgyOC4zIDgyNS41LDg0Ny44IDc4OC41LDg1Ni4xTDc3OC41LDg1OC40TDYzOS4wLDg1OC43QzU2Mi4zLDg1OC45IDQ5MS43LDg1OC45IDQ4Mi4yLDg1OC44TDQ2NC44LDg1OC41TDQ3Ni43LDg0OC4wQzQ4My4yLDg0Mi4yIDUwMi40LDgyNS4xIDUxOS41LDgxMC4xQzUzNi41LDc5NS4wIDU1My44LDc3OS43IDU1Ny45LDc3Ni4xQzU2Mi4wLDc3Mi41IDU3My45LDc2Mi4wIDU4NC4zLDc1Mi44TDYwMy4zLDczNi4wTDY2OC40LDczNi4wQzc0MC4yLDczNi4wIDc0MC43LDczNi4wIDc1MC4yLDcyOS45Qzc3NS4zLDcxMy44IDc3Mi40LDY3Ni45IDc0NS4yLDY2NC4yTDczOS41LDY2MS41TDY5NC44LDY2MS4wTDY1MC4wLDY2MC41TDYyNS45LDYzOC4wQzYxMi42LDYyNS42IDYwMS4xLDYxNS4xIDYwMC4zLDYxNC43QzU5OS4zLDYxNC4xIDU5NS4yLDYxNy4zIDU4NS43LDYyNi4zQzU3OC40LDYzMy4xIDU2Ny4wLDY0My44IDU2MC4yLDY0OS45TDU0OC4wLDY2MS4yTDU0OC4wLDY5MS44TDU0OC4wLDcyMi41TDUxNi4zLDc1MS41QzQ5OC45LDc2Ny41IDQ2Ni44LDc5Ni45IDQ0NS4wLDgxNy4wQzQyMy4zLDgzNy4xIDM5NC4yLDg2My44IDM4MC41LDg3Ni40QzM2Ni43LDg4OS4wIDM1NC4wLDkwMC43IDM1Mi4yLDkwMi40QzM1MC41LDkwNC4wIDM0OS4wLDkwNS4wIDM0OS4wLDkwNC42WiIgZmlsbD0iIzA1MDUwNSIgZmlsbC1ydWxlPSJldmVub2RkIi8+Cjwvc3ZnPg==") center/contain no-repeat}
+.brand-mark svg{width:16px;height:16px;stroke-width:2.5}
+.wordmark{font-weight:700;letter-spacing:.14em;font-size:15px}
+.nav-group{margin-bottom:var(--s5)}
+.nav-label{font-size:11px;letter-spacing:.12em;color:var(--muted);padding:0 var(--s3);margin-bottom:var(--s2);font-weight:600}
+.nav-list{list-style:none;display:grid;gap:2px}
+.nav-item{display:flex;align-items:center;gap:var(--s3);width:100%;padding:9px var(--s3);border-radius:10px;color:var(--muted);position:relative;text-align:left;transition:background .15s,color .15s}
+.nav-item:hover{background:var(--panel);color:var(--text)}
+.nav-item[aria-current="page"]{background:var(--lime-dim);color:var(--lime)}
+.nav-item[aria-current="page"]::before{content:"";position:absolute;left:-16px;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--lime)}
+.sidebar-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding:var(--s3);border:1px solid var(--border);border-radius:var(--r);background:var(--panel)}
+.net{display:flex;align-items:center;gap:var(--s2);font-size:12.5px}
+.net small{display:block;color:var(--muted);font-size:11px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px var(--lime-dim);flex:none}
+.icon-btn{width:32px;height:32px;display:grid;place-items:center;border-radius:8px;color:var(--muted)}
+.icon-btn:hover{background:var(--panel-2);color:var(--text)}
+
+.nav-item.soon{color:var(--muted);gap:var(--s2);cursor:default;opacity:.75}
+.nav-item.soon:hover{background:transparent;color:var(--muted)}
+.soon-name{white-space:nowrap}
+.v2{font-size:10px;color:var(--muted);border:1px solid var(--border-2);border-radius:5px;padding:0 4px;margin-left:2px;vertical-align:1px}
+.soon-badge{margin-left:auto;white-space:nowrap;font-size:9.5px;letter-spacing:.06em;font-weight:700;color:var(--lime);border:1px solid var(--border-2);border-radius:999px;padding:2px 7px}
+/* Main */
+.main{padding:var(--s5) var(--s6) var(--s6);display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s5);align-content:start;min-width:0;max-width:1280px;width:100%}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);flex-wrap:wrap}
+.topbar h1{font-size:22px;font-weight:650;letter-spacing:-.01em}
+.topbar p{color:var(--muted);font-size:13px}
+.top-actions{display:flex;align-items:center;gap:var(--s3)}
+.badge{display:inline-flex;align-items:center;gap:var(--s2);padding:6px 10px;border:1px solid var(--border-2);border-radius:999px;font-size:12px;color:var(--text);background:var(--panel)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);padding:9px 16px;border-radius:10px;font-weight:600;font-size:13px;transition:background .15s,border-color .15s}
+.btn-primary{background:var(--lime);color:#0c0d0b}
+.btn-primary:hover{background:#d6ff3a}
+.btn-ghost{border:1px solid var(--border-2);background:var(--panel)}
+.btn-ghost:hover{border-color:var(--lime);color:var(--lime)}
+
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r)}
+
+/* Welcome */
+.welcome{position:relative;overflow:hidden;padding:var(--s5);display:flex;align-items:center;justify-content:space-between;gap:var(--s5)}
+.welcome h2{font-size:24px;font-weight:650;letter-spacing:-.02em;margin-bottom:var(--s1)}
+.welcome p{color:var(--muted);max-width:52ch}
+.welcome p b{color:var(--text);font-weight:600}
+.accent{width:120px;height:72px;flex:none;color:var(--lime);opacity:.9}
+.accent svg{width:100%;height:100%;stroke-width:1}
+
+/* Stats */
+.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s4)}
+.stat{padding:var(--s4) var(--s5)}
+.stat-head{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:12.5px;margin-bottom:var(--s3)}
+.stat-icon{width:30px;height:30px;border-radius:8px;border:1px solid var(--border-2);display:grid;place-items:center;color:var(--lime)}
+.stat-icon svg{width:16px;height:16px}
+.stat-value{font-size:24px;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat-value .unit{font-size:13px;color:var(--lime);font-weight:600;margin-left:4px;letter-spacing:0}
+.stat-sub{color:var(--muted);font-size:12px;margin-top:2px}
+
+/* Mining */
+.mining{padding:var(--s5)}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);margin-bottom:var(--s4)}
+.panel-head h2{font-size:16px;font-weight:650}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid var(--border-2);color:var(--warn)}
+.status::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s4);padding-bottom:var(--s5);border-bottom:1px solid var(--border)}
+.metric span{display:block;color:var(--muted);font-size:12px;margin-bottom:2px}
+.metric strong{font-size:18px;font-weight:650;font-variant-numeric:tabular-nums}
+.metric strong.lime{color:var(--lime)}
+.progress-row{display:flex;align-items:flex-end;gap:var(--s5);padding-top:var(--s5);flex-wrap:wrap}
+.progress{flex:1;min-width:220px}
+.progress-label{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-bottom:var(--s2)}
+.progress-label b{color:var(--text);font-weight:600}
+.bar{height:6px;border-radius:99px;background:var(--panel-2);border:1px solid var(--border);overflow:hidden}
+.bar i{display:block;height:100%;width:68%;background:var(--lime);border-radius:99px}
+
+/* Activity */
+.activity{padding:var(--s5) 0 var(--s2)}
+.activity .panel-head{padding:0 var(--s5)}
+.link{font-size:12.5px;color:var(--muted)}
+.link:hover{color:var(--lime)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:520px}
+th{text-align:left;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:var(--s2) var(--s5);border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:var(--s3) var(--s5);border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--panel-2)}
+.muted{color:var(--muted)}
+.mono{font-family:var(--mono);font-size:13px}
+.amt-eth{color:var(--lime)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--lime)}
+.pill.dist::before{background:var(--warn)}
+.note{padding:var(--s3) var(--s5) var(--s3);font-size:11.5px;color:var(--muted)}
+
+/* Quick access */
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4)}
+.quick{display:flex;align-items:center;gap:var(--s4);padding:var(--s4) var(--s5);text-align:left;width:100%;transition:border-color .15s,transform .15s,background .15s}
+.quick:hover{border-color:var(--lime);background:var(--panel-2);transform:translateY(-2px)}
+.quick .stat-icon{width:38px;height:38px;border-radius:10px}
+.quick strong{display:block;font-size:14px}
+.quick span.d{color:var(--muted);font-size:12.5px}
+.quick .arrow{margin-left:auto;color:var(--muted)}
+.quick:hover .arrow{color:var(--lime)}
+
+/* Tabs */
+.tabs{display:flex;gap:var(--s2);border-bottom:1px solid var(--border)}
+.tab{padding:10px var(--s4);color:var(--muted);font-weight:600;font-size:13.5px;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab:hover{color:var(--text)}
+.tab[aria-selected="true"]{color:var(--lime);border-bottom-color:var(--lime)}
+.panel[hidden]{display:none}
+.panel{display:grid;gap:var(--s6);min-width:0}
+.sec-head h2{font-size:18px;font-weight:650;letter-spacing:-.01em}
+.sec-head p{color:var(--muted);font-size:13px}
+.sec-head{margin-bottom:var(--s4)}
+
+/* Hero */
+.hero{padding:var(--s6) var(--s5)}
+.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--lime);font-weight:700;margin-bottom:var(--s3)}
+.hero h2{font-size:30px;line-height:1.15;font-weight:700;letter-spacing:-.02em;max-width:22ch}
+.hero p{color:var(--muted);max-width:58ch;margin:var(--s3) 0 var(--s5)}
+.hero-actions{display:flex;gap:var(--s3);flex-wrap:wrap}
+
+/* Steps */
+.step{padding:var(--s5);display:flex;flex-direction:column;gap:var(--s3)}
+.step-top{display:flex;align-items:center;justify-content:space-between}
+.step-no{font-family:var(--mono);font-size:12px;color:var(--lime);letter-spacing:.08em}
+.step h3{font-size:15px;font-weight:650}
+.step p{color:var(--muted);font-size:13px}
+
+.rules{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3) var(--s5);padding:var(--s5);margin-top:var(--s4);font-size:13px;color:var(--muted)}
+.rules li{position:relative;padding-left:var(--s4)}
+.rules li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:var(--lime)}
+@media (max-width:820px){.rules{grid-template-columns:1fr}}
+/* Miners */
+.miner{overflow:hidden;display:flex;flex-direction:column}
+.art{aspect-ratio:1/1;overflow:hidden;background:var(--panel-2);border-bottom:1px solid var(--border);display:grid;place-items:center;position:relative}
+.art svg{width:76px;height:76px;stroke:var(--lime);stroke-width:1.25;opacity:.85}
+.art img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated;display:block}
+.art .badge{position:absolute;top:var(--s3);left:var(--s3);font-size:11px;padding:3px 9px}
+.miner-body{padding:var(--s4) var(--s5) var(--s5);display:grid;gap:var(--s3)}
+.miner-row{display:flex;align-items:center;justify-content:space-between;gap:var(--s3)}
+.miner-row strong{font-size:14px}
+.power{font-size:12px;color:var(--muted)}
+.power b{color:var(--lime);font-family:var(--mono);font-weight:600}
+.miner .btn{width:100%}
+
+/* Info + footer */
+.info{padding:var(--s5);display:flex;gap:var(--s4);align-items:flex-start}
+.info strong{display:block;font-size:14px;margin-bottom:2px}
+.info span.d{color:var(--muted);font-size:13px}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s4)}
+.note-line{font-size:11.5px;color:var(--muted);margin-top:var(--s3)}
+.footer{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1.3fr);gap:var(--s5) var(--s6);align-items:start;padding-top:var(--s5);border-top:1px solid var(--border);color:var(--muted);font-size:12.5px}
+.footer>*{min-width:0}
+.footer-brand{display:grid;gap:var(--s3);justify-items:start}
+.footer-copy{color:var(--muted);font-size:12.5px}
+.footer-nav{display:flex;gap:var(--s2) var(--s5);align-items:center;flex-wrap:wrap}
+.footer-res{min-width:0}
+.res-links{list-style:none;display:flex;flex-wrap:wrap;gap:0 var(--s5)}
+.footer .link{display:inline-flex;align-items:center;min-height:32px;padding:0;font:inherit;font-size:12.5px;color:var(--muted);text-align:left}
+.footer .link:hover{color:var(--lime)}
+.footer .badge{white-space:nowrap}
+@media (max-width:1000px){
+  .footer{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .footer-res{grid-column:1 / -1}
+}
+@media (max-width:560px){
+  .footer{grid-template-columns:minmax(0,1fr);gap:var(--s3);padding-top:var(--s4)}
+  .footer-brand{gap:var(--s1)}
+  .footer-nav{gap:0 var(--s4);min-height:36px}
+  .footer-nav .link{min-height:36px}
+  .res-links{gap:0 var(--s4)}
+  .res-links .link{min-height:36px;min-width:28px}
+}
+.wp{padding:var(--s5);color:var(--muted)}
+.wp h2{color:var(--text);font-size:18px;margin-bottom:var(--s2)}
+
+/* Whitepaper document */
+.doc{max-width:800px;width:100%;margin:0 auto;padding:var(--s6)}
+.doc-head{padding-bottom:var(--s5);border-bottom:1px solid var(--border)}
+.doc-head h1{font-size:34px;line-height:1.1;font-weight:700;letter-spacing:-.025em}
+.doc-sub{color:var(--muted);margin-top:var(--s2);font-size:15px}
+.doc-meta{display:flex;gap:var(--s6);margin-top:var(--s5);flex-wrap:wrap}
+.doc-meta dt{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.doc-meta dd{font-weight:600;margin-top:2px}
+.doc-meta dd.lime{color:var(--lime)}
+.doc-toc{display:flex;flex-wrap:wrap;gap:var(--s2);padding:var(--s4) 0 var(--s5);border-bottom:1px solid var(--border)}
+.doc-toc a{font-size:12.5px;color:var(--muted);padding:5px 11px;border:1px solid var(--border-2);border-radius:999px}
+.doc-toc a:hover{color:var(--lime);border-color:var(--lime)}
+.doc-sec{padding:var(--s5) 0;border-bottom:1px solid var(--border)}
+.doc-sec:last-child{border-bottom:0;padding-bottom:0}
+.doc-sec h2{font-size:19px;font-weight:650;letter-spacing:-.01em;margin-bottom:var(--s3);display:flex;align-items:baseline;gap:var(--s3);scroll-margin-top:84px}
+.doc-no{font-family:var(--mono);font-size:12px;color:var(--lime);letter-spacing:.06em}
+.doc-sec h3{font-size:14px;font-weight:650;margin:var(--s4) 0 var(--s2)}
+.doc-sec p,.doc-sec li{color:var(--muted);font-size:14.5px;line-height:1.7}
+.doc-sec p{margin-bottom:var(--s3)}
+.doc-sec b{color:var(--text);font-weight:600}
+.doc-sec ul{margin:0 0 var(--s3) var(--s5);display:grid;gap:var(--s2)}
+.doc-sec li::marker{color:var(--lime)}
+.doc-tbl{margin:var(--s3) 0 var(--s4);border:1px solid var(--border);border-radius:10px}
+.doc-tbl table{min-width:320px}
+.doc-tbl th,.doc-tbl td{padding:10px var(--s4);white-space:normal;font-size:13.5px}
+.doc-tbl td{color:var(--text)}
+.doc-tbl tbody tr:hover{background:transparent}
+.tba{display:inline-block;font-size:12px;color:var(--warn);border:1px solid var(--border-2);border-radius:999px;padding:1px 9px;line-height:1.5}
+@media (max-width:520px){.doc{padding:var(--s5) var(--s4)}.doc-head h1{font-size:28px}}
+/* Mobile nav */
+.mobile-bar{display:none}
+
+@media (max-width:1100px){
+  :root{--sidebar:210px}
+  .main{padding:var(--s5)}
+  .grid-4,.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid-3{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:1fr}
+}
+@media (max-width:820px){
+  .app{display:block}
+  .sidebar{display:none;position:fixed;inset:0 auto 0 0;width:260px;z-index:30;box-shadow:20px 0 40px rgba(0,0,0,.5)}
+  .sidebar.open{display:flex;height:100dvh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .sidebar>*{flex-shrink:0}
+  .scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20}
+  .scrim.open{display:block}
+  .mobile-bar{display:flex;align-items:center;justify-content:space-between;padding:var(--s3) var(--s4);border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10}
+  .main{padding:var(--s4)}
+  .accent{display:none}
+  .topbar{display:none}
+  .mobile-actions{display:flex;align-items:center;gap:var(--s2)}
+  .mobile-wallet{padding:7px 12px;min-height:36px;font-size:12.5px}
+}
+@media (max-width:520px){
+  .grid-4,.metrics{grid-template-columns:1fr 1fr;gap:var(--s3)}
+  .stat{padding:var(--s3) var(--s4)}
+  .stat-value{font-size:20px}
+  .top-actions{width:100%;justify-content:space-between}
+  .welcome h2{font-size:20px}
+  .hero h2{font-size:24px}
+  .hero-actions .btn{flex:1;min-height:44px}
+  .tab{flex:1;text-align:center}
+  th,td{padding-left:var(--s4);padding-right:var(--s4)}
+  .activity .panel-head,.mining{padding-left:var(--s4);padding-right:var(--s4)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="mobile-bar">
+  <div class="brand" style="padding:0">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="wordmark">BIDBROKER</span>
+  </div>
+  <div class="mobile-actions">
+    <button class="btn btn-primary mobile-wallet" type="button">Connect Wallet</button>
+    <button class="icon-btn" id="menuBtn" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</div>
+<div class="scrim" id="scrim"></div>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar" aria-label="Primary">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="wordmark">BIDBROKER</span>
+    </div>
+
+    <nav>
+      <div class="nav-group">
+        <p class="nav-label">WORKSPACE</p>
+        <ul class="nav-list">
+          <li><a class="nav-item" href="index.html" aria-current="page"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Home</a></li>
+          <li><button class="nav-item" type="button"><svg viewBox="0 0 24 24"><path d="M14 4l6 6-3 3-6-6zM11 7L4 14l3 3 7-7M3 21h8"/></svg>Bid</button></li>
+          <li><button class="nav-item" type="button"><svg viewBox="0 0 24 24"><path d="M14 4l-2 6 5 2-7 8 1-7-5-2z"/></svg>Mine</button></li>
+          <li><button class="nav-item" type="button"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>My Miners</button></li>
+        </ul>
+      </div>
+      <div class="nav-group">
+        <p class="nav-label">ECOSYSTEM</p>
+        <ul class="nav-list">
+          <li><a class="nav-item" href="leaderboard.html"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></svg>Leaderboard</a></li>
+          <li><button class="nav-item" type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9.5h4.5a1.8 1.8 0 0 1 0 3.5H9m0 0h5a1.8 1.8 0 0 1 0 3.5H9M9 7v10"/></svg>Token</button></li>
+          <li><button class="nav-item" type="button"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9zM4 7.5l8 4.5 8-4.5M12 12v9"/></svg>Collection</button></li>
+        </ul>
+      </div>
+          <div class="nav-group">
+        <p class="nav-label">LABS</p>
+        <ul class="nav-list">
+          <li><button class="nav-item soon" type="button" aria-disabled="true"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2h12.4a1.5 1.5 0 0 0 1.3-2L14 9V3M7.5 14h9"/></svg><span class="soon-name">Labs <span class="v2">V2</span></span><span class="soon-badge">COMING SOON</span></button></li>
+        </ul>
+      </div>
+      <div class="nav-group">
+        <p class="nav-label">RESOURCES</p>
+        <ul class="nav-list">
+          <li><a class="nav-item" href="docs.html"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6"/></svg>Docs</a></li>
+          <li><a class="nav-item" href="resources.html#terms" data-res="terms"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6zM9 12l2 2 4-4"/></svg>Terms of Service</a></li>
+          <li><a class="nav-item" href="resources.html#privacy" data-res="privacy"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Privacy Policy</a></li>
+          <li><a class="nav-item" href="https://x.com/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M4 4l7.5 10L4 20h2l6.4-5.4L17 20h3l-7.9-10.5L19.2 4h-2l-5.7 4.9L7 4z"/></svg>X</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="net"><span class="dot" aria-hidden="true"></span><div>Robinhood Chain<small>Network</small></div></div>
+      <button class="icon-btn" type="button" aria-label="Settings (placeholder)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1>Home</h1>
+        <p>Your BIDBROKER overview</p>
+      </div>
+      <div class="top-actions">
+        <span class="badge"><span class="dot" aria-hidden="true"></span>Robinhood Chain</span>
+        <button class="btn btn-primary" type="button">Connect Wallet</button>
+      </div>
+    </header>
+
+    <div class="tabs" role="tablist" aria-label="Home sections">
+      <button class="tab" role="tab" id="tab-overview" aria-selected="true" aria-controls="panel-overview" type="button">Overview</button>
+      <button class="tab" role="tab" id="tab-whitepaper" aria-selected="false" aria-controls="panel-whitepaper" tabindex="-1" type="button">Whitepaper</button>
+    </div>
+
+    <div class="panel" id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
+
+      <section class="card hero" aria-labelledby="heroTitle">
+        <p class="eyebrow">BIDBROKER</p>
+        <h2 id="heroTitle">Bid with BID. Burn the Fees. Mine ETH.</h2>
+        <p>Discover NFT miners, participate in token-powered bidding, and earn ETH rewards through the BIDBROKER mining ecosystem.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" type="button">Explore Miners</button>
+          <button class="btn btn-ghost" type="button" data-goto="whitepaper">Read Whitepaper</button>
+        </div>
+      </section>
+
+      <section aria-labelledby="statsTitle">
+        <div class="sec-head"><h2 id="statsTitle">Protocol Statistics</h2><p>Placeholder values for UI preview only.</p></div>
+        <div class="grid-4">
+        <article class="card stat">
+          <div class="stat-head"><span>Total Miner Supply</span><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9zM12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span></div>
+          <div class="stat-value">5,555</div>
+          <div class="stat-sub">NFT collection supply</div>
+        </article>
+        <article class="card stat">
+          <div class="stat-head"><span>ETH Distributed</span><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 3l6 9-6 3.5L6 12zM6 14.5l6 6.5 6-6.5"/></svg></span></div>
+          <div class="stat-value">0.00<span class="unit">ETH</span></div>
+          <div class="stat-sub">Total rewards distributed</div>
+        </article>
+        <article class="card stat">
+          <div class="stat-head"><span>BID Burned</span><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/></svg></span></div>
+          <div class="stat-value">0<span class="unit">BID</span></div>
+          <div class="stat-sub">Total bid fees burned</div>
+        </article>
+        <article class="card stat">
+          <div class="stat-head"><span>Active Miners</span><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg></span></div>
+          <div class="stat-value">0</div>
+          <div class="stat-sub">Currently mining</div>
+        </article>
+        </div>
+      </section>
+
+      <section aria-labelledby="howTitle">
+        <div class="sec-head"><h2 id="howTitle">How It Works</h2><p>Three simple steps to participate in BIDBROKER.</p></div>
+        <div class="grid-3">
+        <article class="card step">
+          <div class="step-top"><span class="step-no">STEP 01</span><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M14 4l6 6-3 3-6-6zM11 7L4 14l3 3 7-7M3 21h8"/></svg></span></div>
+          <h3>Bid to Mint</h3>
+          <p>Join the auction and place bids using BID tokens. Each Miner NFT is auctioned individually, and the highest bidder wins when the auction ends.</p>
+        </article>
+        <article class="card step">
+          <div class="step-top"><span class="step-no">STEP 02</span><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg></span></div>
+          <h3>Outbid, Refund &amp; Burn</h3>
+          <p>Your bid remains locked while you are the highest bidder. If another user outbids you, your previous bid becomes refundable. Claim your refund before using those tokens to place another bid. BID tokens that remain unused for the auction are burned according to the protocol rules.</p>
+        </article>
+        <article class="card step">
+          <div class="step-top"><span class="step-no">STEP 03</span><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M5 19l9-9M14 4c3 0 6 2 6 6M14 4c-2 2-3 5-2 8M20 10c-2-1-5-1-8 2"/></svg></span></div>
+          <h3>Win &amp; Mine ETH</h3>
+          <p>Win a Miner NFT and activate mining to earn ETH rewards according to the protocol's mining rules and available reward pool.</p>
+        </article>
+        </div>
+        <ul class="card rules" aria-label="Auction rules">
+          <li>Maximum NFT supply is fixed at 5,555.</li>
+          <li>Only one NFT auction runs at a time.</li>
+          <li>Each new NFT auction begins with a 30-minute countdown.</li>
+          <li>When the first valid bid is placed, the countdown switches to 2 minutes.</li>
+          <li>Every subsequent valid new highest bid resets the countdown to 2 minutes.</li>
+          <li>If the countdown reaches zero without another valid bid, the highest bidder wins the NFT.</li>
+          <li>After an auction ends, the next NFT auction begins with a fresh 30-minute countdown.</li>
+          <li>Outbid users can claim their refundable balances, and must do so before using those funds for another bid.</li>
+          <li>BID tokens designated as unused auction tokens are burned according to the protocol rules. Refundable balances owed to users are never burned.</li>
+          <li>Bid principal, refundable balances, and any separate bid fee are distinct values.</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="minersTitle">
+        <div class="sec-head"><h2 id="minersTitle">Featured Miners</h2><p>Discover the miners powering the BIDBROKER ecosystem.</p></div>
+        <div class="grid-3">
+        <article class="card miner">
+          <div class="art" aria-hidden="true"><span class="badge">Miner NFT</span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAWfmNhQlgAABZ+anVtYgAAAB5qdW1kYzJwYQARABCAAACqADibcQNjMnBhAAAAFlhqdW1iAAAAR2p1bWRjMm1hABEAEIAAAKoAOJtxA3VybjpjMnBhOjBhOTc4MDc3LTYxZGUtNGNiOC04MmM5LTc0NTVmNWQ0NzFlMQAAAAOTanVtYgAAAClqdW1kYzJhcwARABCAAACqADibcQNjMnBhLmFzc2VydGlvbnMAAAAAuGp1bWIAAABEanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5pbmdyZWRpZW50LnYzAAAAABhjMnNocFPlCZ/LEXIwSVb4h5Qd5QAAAGxjYm9yo2lkYzpmb3JtYXRpaW1hZ2UvcG5namluc3RhbmNlSUR4LHhtcDppaWQ6ZWZiMmFhNTgtYTk1MC00ODdmLTk1NzUtMWZjN2RjNTNjMDI4bHJlbGF0aW9uc2hpcGhwYXJlbnRPZgAAAeJqdW1iAAAAQWp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuYWN0aW9ucy52MgAAAAAYYzJzaNaGQhTXOIpeRCzvMsaw8/sAAAGZY2JvcqJnYWN0aW9uc4KiZmFjdGlvbmtjMnBhLm9wZW5lZGpwYXJhbWV0ZXJzoWtpbmdyZWRpZW50c4GiY3VybHgtc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5pbmdyZWRpZW50LnYzZGhhc2hYIAnX5xx6UVDdnrYB5ToB3Thm99C0W9WHQAHNe7no8g/2pGZhY3Rpb254HWNvbS5hbnRocm9waWMuY2xhdWRlLnByb3ZpZGVkanBhcmFtZXRlcnOheB9jb20uYW50aHJvcGljLm9yaWdpbi1jb25maWRlbmNlZ3Vua25vd25rZGVzY3JpcHRpb254ZkNsYXVkZSBwcm92aWRlZCB0aGlzIGZpbGUgYXQgdGhlIHJlcXVlc3Qgb2YgYSB1c2VyIGFuZCBtYXkgaGF2ZSBjcmVhdGVkIG9yIG1vZGlmaWVkIHRoZSBmaWxlIGNvbnRlbnRzLm1zb2Z0d2FyZUFnZW50oWRuYW1lZkNsYXVkZXJhbGxBY3Rpb25zSW5jbHVkZWT1AAAAyGp1bWIAAABAanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5oYXNoLmRhdGEAAAAAGGMyc2jxVsEc7O82T4DALbJCzuHPAAAAgGNib3KlY2FsZ2ZzaGEyNTZjcGFkTQAAAAAAAAAAAAAAAABkaGFzaFgg0mLfCyJwpxQdrRc0o3snkP6UyIJWFdZD6KoD6MqW3kRkbmFtZW5qdW1iZiBtYW5pZmVzdGpleGNsdXNpb25zgaJlc3RhcnQYIWZsZW5ndGgZFooAAAI+anVtYgAAACdqdW1kYzJjbAARABCAAACqADibcQNjMnBhLmNsYWltLnYyAAAAAg9jYm9ypWNhbGdmc2hhMjU2aXNpZ25hdHVyZXhNc2VsZiNqdW1iZj0vYzJwYS91cm46YzJwYTowYTk3ODA3Ny02MWRlLTRjYjgtODJjOS03NDU1ZjVkNDcxZTEvYzJwYS5zaWduYXR1cmVqaW5zdGFuY2VJRHgseG1wOmlpZDpiNjUyYjEwZC00NWFlLTRmNTMtYjYzOC03YWExNTg5MDJkZWNyY3JlYXRlZF9hc3NlcnRpb25zg6JjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggCdfnHHpRUN2etgHlOgHdOGb30LRb1YdAAc17uejyD/aiY3VybHgqc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5hY3Rpb25zLnYyZGhhc2hYIAe9VH0c6N6oO8VoneosxMcgzm4py/ujCGIXySalh5M1omN1cmx4KXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaGFzaC5kYXRhZGhhc2hYIG6aRnVUOsX8w4Elyo8EaasDAmOp2MLH2osrV6hT9qc1dGNsYWltX2dlbmVyYXRvcl9pbmZvo2RuYW1lb0FudGhyb3BpYyBGaWxlc2d2ZXJzaW9uZTEuMC4wa3NwZWNWZXJzaW9uZTIuNC4wAAAQOGp1bWIAAAAoanVtZGMyY3MAEQAQgAAAqgA4m3EDYzJwYS5zaWduYXR1cmUAAAAQCGNib3LShFkCEqIBJhghWQIKMIICBjCCAY2gAwIBAgIUQOWgCu7COdC+uIP6BkIFPWdVEwAwCgYIKoZIzj0EAwMwSTEXMBUGA1UEChMOQW50aHJvcGljLCBQQkMxLjAsBgNVBAMTJUFudGhyb3BpYyBDb250ZW50IENyZWRlbnRpYWxzIFJvb3QgQ0EwHhcNMjYwODA3MTg0MzU2WhcNMjgwODA2MTk0MzU2WjBEMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEpMCcGA1UEAxMgQW50aHJvcGljIENsYXVkZSBDb250ZW50IFNpZ25pbmcwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASYegpry1AYBRTVNL1CpTlbROnY3dey+UrsF9C3phYrATN3ZHf93Mo8RQN0KOUuOn19P4oWNFWe5n2/She9N7eTo1gwVjAOBgNVHQ8BAf8EBAMCB4AwFQYDVR0lBA4wDAYKKwYBBAGD6F4CATAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFM5R4gSBTmRbI/jjxM+aPpzB11zCMAoGCCqGSM49BAMDA2cAMGQCMDFzHRSeAXrSy1WOzkbhPZ6Km2wGTmZ/2gK18k8BQGXyqz88Rdrz6CTX9flAnYNVxgIwcF9c3fVhqmJKpi+UhasNUMko69cyX6STPfta3Q8EjyzDjzoyrol46FP6VFHhvUcJoWNwYWRZDZ4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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" alt="" width="512" height="512" loading="lazy"></div>
+          <div class="miner-body">
+            <div class="miner-row"><strong>Miner #0001</strong></div>
+            <button class="btn btn-ghost" type="button">View Miner</button>
+          </div>
+        </article>
+        <article class="card miner">
+          <div class="art" aria-hidden="true"><span class="badge">Miner NFT</span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAWfmNhQlgAABZ+anVtYgAAAB5qdW1kYzJwYQARABCAAACqADibcQNjMnBhAAAAFlhqdW1iAAAAR2p1bWRjMm1hABEAEIAAAKoAOJtxA3VybjpjMnBhOmUyMTgwNWU0LTE4MzAtNDEwNy04OGUwLWFkMmY0NjcyNTA4MwAAAAOTanVtYgAAAClqdW1kYzJhcwARABCAAACqADibcQNjMnBhLmFzc2VydGlvbnMAAAAAuGp1bWIAAABEanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5pbmdyZWRpZW50LnYzAAAAABhjMnNokfkkjMhFH/ehjKuZ3IYhygAAAGxjYm9yo2lkYzpmb3JtYXRpaW1hZ2UvcG5namluc3RhbmNlSUR4LHhtcDppaWQ6YjcyMWM3OTEtNDQzOS00M2RkLThjMWEtNzY1NjVkM2M1MWZjbHJlbGF0aW9uc2hpcGhwYXJlbnRPZgAAAeJqdW1iAAAAQWp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuYWN0aW9ucy52MgAAAAAYYzJzaAF6+2WlxA2stQ7O3Fp/M+oAAAGZY2JvcqJnYWN0aW9uc4KiZmFjdGlvbmtjMnBhLm9wZW5lZGpwYXJhbWV0ZXJzoWtpbmdyZWRpZW50c4GiY3VybHgtc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5pbmdyZWRpZW50LnYzZGhhc2hYIL9k/Bn/PryX/CehDOncXNLTAm9UR+/7GY0TecfHcFpApGZhY3Rpb254HWNvbS5hbnRocm9waWMuY2xhdWRlLnByb3ZpZGVkanBhcmFtZXRlcnOheB9jb20uYW50aHJvcGljLm9yaWdpbi1jb25maWRlbmNlZ3Vua25vd25rZGVzY3JpcHRpb254ZkNsYXVkZSBwcm92aWRlZCB0aGlzIGZpbGUgYXQgdGhlIHJlcXVlc3Qgb2YgYSB1c2VyIGFuZCBtYXkgaGF2ZSBjcmVhdGVkIG9yIG1vZGlmaWVkIHRoZSBmaWxlIGNvbnRlbnRzLm1zb2Z0d2FyZUFnZW50oWRuYW1lZkNsYXVkZXJhbGxBY3Rpb25zSW5jbHVkZWT1AAAAyGp1bWIAAABAanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5oYXNoLmRhdGEAAAAAGGMyc2gKQB87TmAv56lrA9Vq5YGmAAAAgGNib3KlY2FsZ2ZzaGEyNTZjcGFkTQAAAAAAAAAAAAAAAABkaGFzaFgg1UsndrqqsSzNgMotXou1gP6V+xi7o9nwCsFTN/f+6jxkbmFtZW5qdW1iZiBtYW5pZmVzdGpleGNsdXNpb25zgaJlc3RhcnQYIWZsZW5ndGgZFooAAAI+anVtYgAAACdqdW1kYzJjbAARABCAAACqADibcQNjMnBhLmNsYWltLnYyAAAAAg9jYm9ypWNhbGdmc2hhMjU2aXNpZ25hdHVyZXhNc2VsZiNqdW1iZj0vYzJwYS91cm46YzJwYTplMjE4MDVlNC0xODMwLTQxMDctODhlMC1hZDJmNDY3MjUwODMvYzJwYS5zaWduYXR1cmVqaW5zdGFuY2VJRHgseG1wOmlpZDo3ZDBiOGRlYy1hNGNlLTQxNWEtOWYyNy01NmM5Nzg1ZDhjZDVyY3JlYXRlZF9hc3NlcnRpb25zg6JjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggv2T8Gf8+vJf8J6EM6dxc0tMCb1RH7/sZjRN5x8dwWkCiY3VybHgqc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5hY3Rpb25zLnYyZGhhc2hYIPCB/MJW6ZnHDcQH8NVR1RBxPbY53Q8IQGjx7+lHE3QsomN1cmx4KXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaGFzaC5kYXRhZGhhc2hYIO8uUJf7AAWgfyNAFt4TsdOfE1qHVmKlBLZA6kMpNOemdGNsYWltX2dlbmVyYXRvcl9pbmZvo2RuYW1lb0FudGhyb3BpYyBGaWxlc2d2ZXJzaW9uZTEuMC4wa3NwZWNWZXJzaW9uZTIuNC4wAAAQOGp1bWIAAAAoanVtZGMyY3MAEQAQgAAAqgA4m3EDYzJwYS5zaWduYXR1cmUAAAAQCGNib3LShFkCEqIBJhghWQIKMIICBjCCAY2gAwIBAgIUQOWgCu7COdC+uIP6BkIFPWdVEwAwCgYIKoZIzj0EAwMwSTEXMBUGA1UEChMOQW50aHJvcGljLCBQQkMxLjAsBgNVBAMTJUFudGhyb3BpYyBDb250ZW50IENyZWRlbnRpYWxzIFJvb3QgQ0EwHhcNMjYwODA3MTg0MzU2WhcNMjgwODA2MTk0MzU2WjBEMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEpMCcGA1UEAxMgQW50aHJvcGljIENsYXVkZSBDb250ZW50IFNpZ25pbmcwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASYegpry1AYBRTVNL1CpTlbROnY3dey+UrsF9C3phYrATN3ZHf93Mo8RQN0KOUuOn19P4oWNFWe5n2/She9N7eTo1gwVjAOBgNVHQ8BAf8EBAMCB4AwFQYDVR0lBA4wDAYKKwYBBAGD6F4CATAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFM5R4gSBTmRbI/jjxM+aPpzB11zCMAoGCCqGSM49BAMDA2cAMGQCMDFzHRSeAXrSy1WOzkbhPZ6Km2wGTmZ/2gK18k8BQGXyqz88Rdrz6CTX9flAnYNVxgIwcF9c3fVhqmJKpi+UhasNUMko69cyX6STPfta3Q8EjyzDjzoyrol46FP6VFHhvUcJoWNwYWRZDZ4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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" alt="" width="512" height="512" loading="lazy"></div>
+          <div class="miner-body">
+            <div class="miner-row"><strong>Miner #0002</strong></div>
+            <button class="btn btn-ghost" type="button">View Miner</button>
+          </div>
+        </article>
+        <article class="card miner">
+          <div class="art" aria-hidden="true"><span class="badge">Miner NFT</span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAWfmNhQlgAABZ+anVtYgAAAB5qdW1kYzJwYQARABCAAACqADibcQNjMnBhAAAAFlhqdW1iAAAAR2p1bWRjMm1hABEAEIAAAKoAOJtxA3VybjpjMnBhOmEyMmQzMDZlLWUzMzItNDIyYi1iNWVlLWZiODBjMmYzNTUyNwAAAAOTanVtYgAAAClqdW1kYzJhcwARABCAAACqADibcQNjMnBhLmFzc2VydGlvbnMAAAAAuGp1bWIAAABEanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5pbmdyZWRpZW50LnYzAAAAABhjMnNosINfdLabbg6dyb5BFGUrjwAAAGxjYm9yo2lkYzpmb3JtYXRpaW1hZ2UvcG5namluc3RhbmNlSUR4LHhtcDppaWQ6ODFjZmNjNTUtNjMzYy00YjQzLTgwZjItMTkyMzBiMWQ0Zjc5bHJlbGF0aW9uc2hpcGhwYXJlbnRPZgAAAeJqdW1iAAAAQWp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuYWN0aW9ucy52MgAAAAAYYzJzaDDIO2TE4Y2UzJevqaJnUZ4AAAGZY2JvcqJnYWN0aW9uc4KiZmFjdGlvbmtjMnBhLm9wZW5lZGpwYXJhbWV0ZXJzoWtpbmdyZWRpZW50c4GiY3VybHgtc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5pbmdyZWRpZW50LnYzZGhhc2hYIIRiFcIlbQdfHOYFD70T6CXOKESMaTsA+HfgCjj4XjbqpGZhY3Rpb254HWNvbS5hbnRocm9waWMuY2xhdWRlLnByb3ZpZGVkanBhcmFtZXRlcnOheB9jb20uYW50aHJvcGljLm9yaWdpbi1jb25maWRlbmNlZ3Vua25vd25rZGVzY3JpcHRpb254ZkNsYXVkZSBwcm92aWRlZCB0aGlzIGZpbGUgYXQgdGhlIHJlcXVlc3Qgb2YgYSB1c2VyIGFuZCBtYXkgaGF2ZSBjcmVhdGVkIG9yIG1vZGlmaWVkIHRoZSBmaWxlIGNvbnRlbnRzLm1zb2Z0d2FyZUFnZW50oWRuYW1lZkNsYXVkZXJhbGxBY3Rpb25zSW5jbHVkZWT1AAAAyGp1bWIAAABAanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5oYXNoLmRhdGEAAAAAGGMyc2h4IM/vl5H31MHQTyBN7VfZAAAAgGNib3KlY2FsZ2ZzaGEyNTZjcGFkTQAAAAAAAAAAAAAAAABkaGFzaFgg0Utceld2Ux3CmaaxUiE1qsFypxvO6d7tO3+IM68bPCVkbmFtZW5qdW1iZiBtYW5pZmVzdGpleGNsdXNpb25zgaJlc3RhcnQYIWZsZW5ndGgZFooAAAI+anVtYgAAACdqdW1kYzJjbAARABCAAACqADibcQNjMnBhLmNsYWltLnYyAAAAAg9jYm9ypWNhbGdmc2hhMjU2aXNpZ25hdHVyZXhNc2VsZiNqdW1iZj0vYzJwYS91cm46YzJwYTphMjJkMzA2ZS1lMzMyLTQyMmItYjVlZS1mYjgwYzJmMzU1MjcvYzJwYS5zaWduYXR1cmVqaW5zdGFuY2VJRHgseG1wOmlpZDpmYjM5MTE2Ny0zNzMzLTRjZTEtYjA1MC03NGJiZDU3NTk2NDhyY3JlYXRlZF9hc3NlcnRpb25zg6JjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgghGIVwiVtB18c5gUPvRPoJc4oRIxpOwD4d+AKOPheNuqiY3VybHgqc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5hY3Rpb25zLnYyZGhhc2hYIKwFtmaZWaPj7/KimF4Fb2xt5r9Fp9O/i1BPwZPArX0WomN1cmx4KXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaGFzaC5kYXRhZGhhc2hYIMUl40HfArE4bMNJLyncF7peIJ0c5kkumDB0Ygp5ZwtBdGNsYWltX2dlbmVyYXRvcl9pbmZvo2RuYW1lb0FudGhyb3BpYyBGaWxlc2d2ZXJzaW9uZTEuMC4wa3NwZWNWZXJzaW9uZTIuNC4wAAAQOGp1bWIAAAAoanVtZGMyY3MAEQAQgAAAqgA4m3EDYzJwYS5zaWduYXR1cmUAAAAQCGNib3LShFkCEqIBJhghWQIKMIICBjCCAY2gAwIBAgIUQOWgCu7COdC+uIP6BkIFPWdVEwAwCgYIKoZIzj0EAwMwSTEXMBUGA1UEChMOQW50aHJvcGljLCBQQkMxLjAsBgNVBAMTJUFudGhyb3BpYyBDb250ZW50IENyZWRlbnRpYWxzIFJvb3QgQ0EwHhcNMjYwODA3MTg0MzU2WhcNMjgwODA2MTk0MzU2WjBEMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEpMCcGA1UEAxMgQW50aHJvcGljIENsYXVkZSBDb250ZW50IFNpZ25pbmcwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASYegpry1AYBRTVNL1CpTlbROnY3dey+UrsF9C3phYrATN3ZHf93Mo8RQN0KOUuOn19P4oWNFWe5n2/She9N7eTo1gwVjAOBgNVHQ8BAf8EBAMCB4AwFQYDVR0lBA4wDAYKKwYBBAGD6F4CATAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFM5R4gSBTmRbI/jjxM+aPpzB11zCMAoGCCqGSM49BAMDA2cAMGQCMDFzHRSeAXrSy1WOzkbhPZ6Km2wGTmZ/2gK18k8BQGXyqz88Rdrz6CTX9flAnYNVxgIwcF9c3fVhqmJKpi+UhasNUMko69cyX6STPfta3Q8EjyzDjzoyrol46FP6VFHhvUcJoWNwYWRZDZ4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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+Xv3/T/xUOn0Oye/81Tz+Bc+UTtPGisAgFACABBKAABCCQBAKAEACCUAAKEEACBUeR9A1dr3DfzWgfa8//fOX+x8xTr2DVT9ws/9bPN4dX/Azk779b3nDfRMvW+gamlz/T29efyvf/4rxfP8cfN4dX/Aqdde7VxPe67/ySceLJ2nej1rV/37aQUAEEoAAEIJAEAoAQAIJQAAoQQAIJQAAITas+/g4bmv4ar05l6fffkfm8dvOfTh5vHjX/py83jveQA91X0Dvdf3jNo3cPaH328ef+P1/24e78379/YH9PTOU1X9f6v7BtYy199Tv//+483j995zV/P4qLn76nMIekbN+1+4dKl5fO+B64acv2rqfVFWAAChBAAglAAAhBIAgFACABBKAABCCQBAqMmfBzDK5fMvNY8/23n9xz52rHn831/78ZDrqT8nYFp7/u/15vEfnu39hMaozvWP2jdQ/X8v/scrzeNnzpwpnWdpqvf3P/HQHaXzf/z3P9v5l/bzAKqWdr/+3t+N7373ZOk8vX0DS3veiRUAQCgBAAglAAChBAAglAAAhBIAgFACABBqtn0Avbn+nt587igPfPVPmseP7zzdPP6988t6TsDU5prfn+t5A1VLu6/9k0882Dx+7M72PoCp7/u/dtW/P719A71dOXM9b8AKACCUAACEEgCAUAIAEEoAAEIJAEAoAQAINfk+gN68/9Rz/T2/uP+a5vHecwJ6+wN2vvo7zcPHv/Tl5vHevoGlzfv39Obre3P6a9k3UNWb9z+6/z3N47376X/hT9v30++dvzp33/t/T37nqebxtHn/236t9lyEqlH7BqbeH2AFABBKAABCCQBAKAEACCUAAKEEACCUAACEGrYPoDfvf+9n2/POVS+ee37IeXp6+wN6Ru0beOTh9r6BT3/maOl6ptabrx81pz/XvoGe3jz+1z//lebxEw/V5sp7+wZ68/g9vTn9x1+ufe7WPu8/9Vx/1fU33DTk9ScebL/fRu0PsAIACCUAAKEEACCUAACEEgCAUAIAEEoAAEJN/jyAM3/zZPP4R3/z46XzVOdq175v4IM33l6+pjmMmt+vnn/q+/73HLtzzLz51PffN9c/VvXvT9W3T/75pOfvsQIACCUAAKEEACCUAACEEgCAUAIAEEoAAEIN2wfQuz/1j55/Zsj57Rv4qd6+gZtven/5miqWdt//6v87yr333DXkPKdeG3Ka1TDXv9m//OsrzeOj7vvfYwUAEEoAAEIJAEAoAQAIJQAAoQQAIJQAAISa/HkAU+8P6EnbN1D13mvf1zx+7oX276U3X9+b01/LvoGq3n38q9yvf6y1zPX3TD3v32MFABBKAABCCQBAKAEACCUAAKEEACCUAACEmnwfQE917tW+gc3+7cJPmsd78/6jjJrTn2vfQM/a5/SrzPVvNmqu/+Ded5XO88LlN0qvr7ICAAglAAChBAAglAAAhBIAgFACABBKAABCzbYPoKo6V/usfQNvyw0Hb2se7z0noGqufQNpzPVvNtf9+qtz/VPvG7ACAAglAAChBAAglAAAhBIAgFACABBKAABCLW4fwKi5V88bGKu3P6BnafsG1s5c/2ZzzfVPbep9A1YAAKEEACCUAACEEgCAUAIAEEoAAEIJAECoyfcBTH0/61HsGxhrLfsG5mKuf7NtneufmucBAPCWCABAKAEACCUAAKEEACCUAACEEgCAUOV9AGuZ65+afQNjzbVvYBRz/ZuZ618mKwCAUAIAEEoAAEIJAEAoAQAIJQAAoQQAINSuuf53hn0DY1X3Dezs1N635vo3M9e/HawAAEIJAEAoAQAIJQAAoQQAIJQAAIQSAIBQe/YdPFz6AvsGluny+ZdKr//ATbU5+uq+gaqp9w0sjbl+lsAKACCUAACEEgCAUAIAEEoAAEIJAEAoAQAIVd4HUGXfwDLZNzCWuX7WyAoAIJQAAIQSAIBQAgAQSgAAQgkAQCgBAAg1+T6AKvsGlilt38Da5/pvvfbG5nGfl+1W/ftpBQAQSgAAQgkAQCgBAAglAAChBAAglAAAhFrcPoAq+waWae37BqrWcr9+n5d1mfr3ZQUAEEoAAEIJAEAoAQAIJQAAoQQAIJQAAITanfsCrlZ17tUc9Fjdn2fxfvQ/ev6ZUZfUVN03sJa5/iqfl3kt7edpBQAQSgAAQgkAQCgBAAglAAChBAAglAAAhFr9PoAqc9CbzfX9Vufiq/sGPnDz+5vHz5z52+bxtcz1T83nZbO1f79WAAChBAAglAAAhBIAgFACABBKAABCCQBAqD37Dh6e+xq2ytLmgpd2PXO5fP6l0uu3da5/aZb2/lza9UzNCgAglAAAhBIAgFACABBKAABCCQBAKAEACGUfwMyqc8dVa59Thiv5vIxlBQAQSgAAQgkAQCgBAAglAAChBAAglAAAhBIAgFACABBKAABCCQBAKAEACCUAAKEEACCUAACE2p37ArZN9X7lU99/fGnXA1da2vtzadczNSsAgFACABBKAABCCQBAKAEACCUAAKEEACCUfQBvYu1zwdXrWfv3y7zW/v5J+7xYAQCEEgCAUAIAEEoAAEIJAEAoAQAIJQAAoeL2Aax9bndqaXPQbOb3u9naPy9WAAChBAAglAAAhBIAgFACABBKAABCCQBAqP8HS6IUNbiXTP8AAAAASUVORK5CYII=" alt="" width="512" height="512" loading="lazy"></div>
+          <div class="miner-body">
+            <div class="miner-row"><strong>Miner #0003</strong></div>
+            <button class="btn btn-ghost" type="button">View Miner</button>
+          </div>
+        </article>
+        </div>
+        <p class="note-line">Placeholder artwork and mock mining power values. Final NFT metadata to be provided.</p>
+      </section>
+
+      <section aria-labelledby="bidTitle">
+        <div class="sec-head"><h2 id="bidTitle">Built Around BID</h2></div>
+        <div class="grid-2">
+        <article class="card info"><span class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9.5h4.5a1.8 1.8 0 0 1 0 3.5H9m0 0h5a1.8 1.8 0 0 1 0 3.5H9M9 7v10"/></svg></span><div><strong>Token-Powered Bidding</strong><span class="d">Use BID as the bidding currency for Miner NFTs.</span></div></article>
+        <article class="card info"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/></svg></span><div><strong>Permanent Fee Burn</strong><span class="d">Bid fees are burned according to the BIDBROKER protocol rules.</span></div></article>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer-brand">
+          <a class="brand" href="index.html" aria-label="BIDBROKER home" style="padding:0"><span class="brand-mark" aria-hidden="true"></span><span class="wordmark">BIDBROKER</span></a>
+          <span class="footer-copy">&copy; 2026 BIDBROKER.</span>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <button class="link" type="button" data-goto="whitepaper">Whitepaper</button>
+          <span class="badge"><span class="dot" aria-hidden="true"></span>Robinhood Chain</span>
+        </nav>
+        <div class="footer-res">
+          <ul class="res-links">
+            <li><a class="link" href="docs.html">Docs</a></li>
+            <li><a class="link" href="resources.html#terms">Terms of Service</a></li>
+            <li><a class="link" href="resources.html#privacy">Privacy Policy</a></li>
+            <li><a class="link" href="resources.html#legal">Legal</a></li>
+            <li><button class="link" type="button" aria-disabled="true" title="X link not configured yet">X</button></li>
+          </ul>
+        </div>
+      </footer>
+    </div>
+
+    <div class="panel" id="panel-whitepaper" role="tabpanel" aria-labelledby="tab-whitepaper" hidden>
+      <article class="card doc" aria-labelledby="wpTitle">
+        <header class="doc-head">
+          <p class="eyebrow">BIDBROKER WHITEPAPER</p>
+          <h1 id="wpTitle">Bid. Win. Mine.</h1>
+          <p class="doc-sub">An NFT auction and ETH mining ecosystem powered by BID.</p>
+          <dl class="doc-meta">
+            <div><dt>Network</dt><dd>Robinhood Chain</dd></div>
+            <div><dt>NFT Supply</dt><dd class="lime">5,555</dd></div>
+          </dl>
+        </header>
+        <nav class="doc-toc" aria-label="Whitepaper contents"><a href="#wp-intro">Introduction</a><a href="#wp-how">How It Works</a><a href="#wp-auction">Auction Mechanics</a><a href="#wp-token">BID Token &amp; Burn</a><a href="#wp-mining">Mining &amp; Boost</a><a href="#wp-funding">Reward Funding</a><a href="#wp-supply">Supply &amp; Limits</a><a href="#wp-risk">Risks</a></nav>
+        <section class="doc-sec" aria-labelledby="wp-intro">
+          <h2 id="wp-intro"><span class="doc-no">01</span>Introduction</h2>
+          <p>BIDBROKER is an NFT auction and ETH mining ecosystem on Robinhood Chain. Miner NFTs are won through auctions that use the BID token. Holders can then put their Miner NFTs to work to earn ETH rewards.</p>
+          <p>This document describes the confirmed mechanics of the project. Economic parameters that have not been finalized are marked <span class="tba">To be announced</span> or <span class="tba">To be specified</span> and should not be treated as commitments.</p>
+        </section>
+        <section class="doc-sec" aria-labelledby="wp-how">
+          <h2 id="wp-how"><span class="doc-no">02</span>How BIDBROKER Works</h2>
+          <ul>
+            <li><b>Bid.</b> Users place bids on Miner NFTs using BID tokens.</li>
+            <li><b>Win.</b> Each NFT is auctioned individually. The highest bidder when the countdown ends wins the NFT.</li>
+            <li><b>Mine.</b> Winners can use their NFTs for mining and receive rewards paid in ETH.</li>
+          </ul>
+          <p>BID is the bidding currency. ETH is the reward asset. The two are kept separate throughout the protocol.</p>
+        </section>
+        <section class="doc-sec" aria-labelledby="wp-auction">
+          <h2 id="wp-auction"><span class="doc-no">03</span>NFT Auction Mechanics</h2>
+          <p>Miner NFTs are auctioned one at a time, and only one auction runs at any moment.</p>
+          <div class="table-wrap doc-tbl"><table><thead><tr><th scope="col">Stage</th><th scope="col">Countdown</th></tr></thead><tbody><tr><td>A new auction begins, no bid placed yet</td><td>30 minutes</td></tr><tr><td>First valid bid is placed</td><td>Switches to 2 minutes</td></tr><tr><td>Each later valid new highest bid</td><td>Resets to 2 minutes</td></tr><tr><td>Countdown reaches zero with no new valid bid</td><td>Highest bidder wins the NFT</td></tr><tr><td>After an auction ends</td><td>Next auction starts with a fresh 30 minutes</td></tr></tbody></table></div>
+          <h3>Locked bids and refunds</h3>
+          <p>A bid stays locked while its owner is the highest bidder. When another user outbids them, the previous bid becomes a refundable balance that the user can claim. Users must claim a refund before reusing those funds for another bid.</p>
+          <p>Refundable balances belong to the user. They are not the same thing as tokens designated for burning, and they are never burned.</p>
+        </section>
+        <section class="doc-sec" aria-labelledby="wp-token">
+          <h2 id="wp-token"><span class="doc-no">04</span>BID Token &amp; Burn</h2>
+          <p>BID is used to place bids. Tokens designated as unused auction tokens are burned according to the protocol's defined rules.</p>
+          <ul>
+            <li>Refundable outbid balances are never burned.</li>
+            <li>The winning bid principal is not assumed to be burned.</li>
+            <li>Bid principal, refundable balances, and any separate bid fee are distinct values and are not assumed to be equal.</li>
+          </ul>
+          <div class="table-wrap doc-tbl"><table><thead><tr><th scope="col">Parameter</th><th scope="col">Status</th></tr></thead><tbody><tr><td>BID total supply</td><td><span class="tba">To be announced</span></td></tr><tr><td>Token allocation</td><td><span class="tba">To be announced</span></td></tr><tr><td>Separate bid fee (if any) and its rate</td><td><span class="tba">To be specified</span></td></tr><tr><td>Exact burn amounts and designation rules</td><td><span class="tba">To be specified</span></td></tr></tbody></table></div>
+        </section>
+        <section class="doc-sec" aria-labelledby="wp-mining">
+          <h2 id="wp-mining"><span class="doc-no">05</span>ETH Mining &amp; Boost Power</h2>
+          <p>Miner NFT owners can activate mining and earn rewards in ETH. A single wallet can use at most four NFTs for mining. Using more NFTs raises the wallet's boost level.</p>
+          <div class="table-wrap doc-tbl"><table><thead><tr><th scope="col">NFTs used for mining</th><th scope="col">Boost</th></tr></thead><tbody><tr><td>1</td><td>1x</td></tr><tr><td>2</td><td>2x</td></tr><tr><td>3</td><td>3x</td></tr><tr><td>4 (maximum)</td><td>5x</td></tr></tbody></table></div>
+          <p>There is no epoch-based reward schedule. The exact reward calculation and distribution rules are <span class="tba">To be specified</span>.</p>
+        </section>
+        <section class="doc-sec" aria-labelledby="wp-funding">
+          <h2 id="wp-funding"><span class="doc-no">06</span>Reward Funding</h2>
+          <p>Mining rewards are funded from a portion of the ETH fees that the project receives from token launches.</p>
+          <div class="table-wrap doc-tbl"><table><thead><tr><th scope="col">Parameter</th><th scope="col">Status</th></tr></thead><tbody><tr><td>Share of launch fees allocated to mining</td><td><span class="tba">To be announced</span></td></tr><tr><td>Reward distribution formula</td><td><span class="tba">To be specified</span></td></tr><tr><td>ETH reward rate over time</td><td>Not fixed or guaranteed</td></tr></tbody></table></div>
+          <p>Rewards depend on the ETH funds available in the reward pool and on the final distribution rules. No fixed ETH amount per hour or per day is promised.</p>
+        </section>
+        <section class="doc-sec" aria-labelledby="wp-supply">
+          <h2 id="wp-supply"><span class="doc-no">07</span>Supply &amp; Limitations</h2>
+          <ul>
+            <li>Maximum NFT supply is fixed at 5,555.</li>
+            <li>One auction at a time, with NFTs auctioned individually.</li>
+            <li>Maximum of four NFTs per wallet can be used for mining.</li>
+            <li>Mining boost tops out at 5x with four NFTs.</li>
+            <li>Reward availability is limited by the ETH reward funds.</li>
+          </ul>
+        </section>
+        <section class="doc-sec" aria-labelledby="wp-risk">
+          <h2 id="wp-risk"><span class="doc-no">08</span>Risks &amp; Disclaimer</h2>
+          <p>This whitepaper is informational and is not financial, investment, or legal advice. Participation involves risk, including:</p>
+          <ul>
+            <li>Token price volatility and loss of value of BID tokens and Miner NFTs.</li>
+            <li>Limited or no liquidity for tokens and NFTs.</li>
+            <li>Smart contract bugs or exploits.</li>
+            <li>Reward availability depending on ETH funds that are not guaranteed.</li>
+            <li>Parameters that are still to be announced or specified may change.</li>
+          </ul>
+          <p>Only participate with funds you can afford to lose, and do your own research.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+</div>
+
+<script>
+  // Mobile navigation toggle (UI only)
+  (function () {
+    var btn = document.getElementById('menuBtn');
+    var sidebar = document.getElementById('sidebar');
+    var scrim = document.getElementById('scrim');
+    function set(open) {
+      sidebar.classList.toggle('open', open);
+      scrim.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    }
+    btn.addEventListener('click', function () { set(!sidebar.classList.contains('open')); });
+    scrim.addEventListener('click', function () { set(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  })();
+
+  // Home tabs (Overview / Whitepaper)
+  (function () {
+    var tabs = [].slice.call(document.querySelectorAll('.tab'));
+    function show(name) {
+      tabs.forEach(function (t) {
+        var on = t.id === 'tab-' + name;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById('panel-' + t.id.slice(4)).hidden = !on;
+      });
+      window.scrollTo(0, 0);
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { show(t.id.slice(4)); });
+      t.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+          var n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+          show(n.id.slice(4)); n.focus();
+        }
+      });
+    });
+    document.querySelectorAll('[data-goto]').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-goto')); });
+    });
+    if (location.hash === '#whitepaper') show('whitepaper');
+  })();
+</script>
+</body>
+</html>
