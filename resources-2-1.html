@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BIDBROKER — Resources</title>
+<style>
+:root{
+  --bg:#0c0d0b; --panel:#131411; --panel-2:#181a16; --border:#23251f; --border-2:#2e3129;
+  --text:#f4f5f1; --muted:#8b9084; --lime:#c8ff00; --lime-dim:rgba(200,255,0,.1); --warn:#e6b44c;
+  --r:12px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --hh:64px; --s1:4px;
+  --font:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5;min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+:focus-visible{outline:2px solid var(--lime);outline-offset:2px;border-radius:6px}
+
+.hdr{position:sticky;top:0;z-index:20;background:rgba(12,13,11,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+.hdr-in{display:flex;align-items:center;justify-content:space-between;gap:var(--s3) var(--s4);flex-wrap:wrap;max-width:1240px;margin:0 auto;padding:var(--s3) var(--s5)}
+.brand{display:flex;align-items:center;gap:var(--s3)}
+.brand-mark{width:28px;height:28px;flex:none;background:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjIxNyAyMjIgODE5IDc5OCIgd2lkdGg9IjgxOSIgaGVpZ2h0PSI3OTgiPgo8ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMjE3IiB5MT0iMjIyIiB4Mj0iMTAzNiIgeTI9IjEwMjAiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI0YwRkYxRSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzk4RkYwMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8cmVjdCB4PSIyMTciIHk9IjIyMiIgd2lkdGg9IjgxOSIgaGVpZ2h0PSI3OTgiIHJ4PSIxNjUiIHJ5PSIxNjUiIGZpbGw9InVybCgjZykiLz4KPHBhdGggZD0iTTM0OS4wLDkwNC42QzM0OS4wLDkwMy42IDM1Ni4xLDg4Mi40IDM3MS41LDgzNy41QzM3Ny45LDgxOC44IDM5MC4wLDc4My4zIDM5OC40LDc1OC42TDQxMy42LDcxMy44TDQ0Mi45LDY4Ny44QzQ1OS4wLDY3My41IDQ3Mi4wLDY2MS43IDQ3MS44LDY2MS41QzQ3MS42LDY2MS4zIDQ1Ny4xLDY2My44IDQzOS42LDY2Ny4xQzQyMi4wLDY3MC4zIDQwNy40LDY3Mi43IDQwNy4xLDY3Mi40QzQwNi4zLDY3MS42IDQwNS45LDU4MS43IDQwNi43LDU2Mi44TDQwNy4zLDU0Ny4wTDQ2Ni45LDU0Ny4wTDUyNi41LDU0Ny4xTDU0MS41LDU2MC43QzU0OS44LDU2OC4yIDU2Ni4xLDU4My4wIDU3Ny45LDU5My43TDU5OS4yLDYxMy4yTDYwMS45LDYxMC43QzYwMy4zLDYwOS40IDYxNC4zLDU5OS4xIDYyNi4zLDU4Ny44QzY1Mi4yLDU2My40IDY0My43LDU2Ni4wIDY5NS42LDU2Ni4wTDczMi43LDU2Ni4wTDc0Ny40LDU1My40Qzc2NC45LDUzOC41IDc2Ni41LDUzNi4wIDc2Ni41LDUyNC4wQzc2Ni40LDUwOC40IDc1NC43LDQ5NS4yIDczOC4xLDQ5Mi4wQzczNC42LDQ5MS40IDY3My42LDQ5MS4wIDU2My4xLDQ5MS4wTDM5My41LDQ5MS4wTDM3OS42LDQ2MC4yQzM3MS45LDQ0My4zIDM2MC41LDQxOC41IDM1NC4yLDQwNS4wQzM0Ny45LDM5MS41IDM0MS41LDM3Ny43IDMzOS45LDM3NC4yTDMzNy4xLDM2OC4wTDU1Ni44LDM2OC4zQzgwMC4wLDM2OC42IDc4MC44LDM2OC4xIDgwMy4yLDM3NS4wQzg0My43LDM4Ny41IDg3Ny44LDQyMi40IDg4OC40LDQ2Mi4wQzkwMS43LDUxMS43IDg4MS42LDU2Mi41IDgzNi44LDU5Mi4wQzgzMS44LDU5NS4zIDgyNy4zLDU5OC4wIDgyNi44LDU5OC4wQzgyNC44LDU5OC4wIDgyNi4zLDU5OS45IDgyOS4yLDYwMS4xQzgzMS4wLDYwMS44IDgzNi4zLDYwNC45IDg0MS4wLDYwOC4wQzkwNS4yLDY1MC4zIDkyMS4wLDczNy4xIDg3NS45LDgwMC4zQzg1Ni4wLDgyOC4zIDgyNS41LDg0Ny44IDc4OC41LDg1Ni4xTDc3OC41LDg1OC40TDYzOS4wLDg1OC43QzU2Mi4zLDg1OC45IDQ5MS43LDg1OC45IDQ4Mi4yLDg1OC44TDQ2NC44LDg1OC41TDQ3Ni43LDg0OC4wQzQ4My4yLDg0Mi4yIDUwMi40LDgyNS4xIDUxOS41LDgxMC4xQzUzNi41LDc5NS4wIDU1My44LDc3OS43IDU1Ny45LDc3Ni4xQzU2Mi4wLDc3Mi41IDU3My45LDc2Mi4wIDU4NC4zLDc1Mi44TDYwMy4zLDczNi4wTDY2OC40LDczNi4wQzc0MC4yLDczNi4wIDc0MC43LDczNi4wIDc1MC4yLDcyOS45Qzc3NS4zLDcxMy44IDc3Mi40LDY3Ni45IDc0NS4yLDY2NC4yTDczOS41LDY2MS41TDY5NC44LDY2MS4wTDY1MC4wLDY2MC41TDYyNS45LDYzOC4wQzYxMi42LDYyNS42IDYwMS4xLDYxNS4xIDYwMC4zLDYxNC43QzU5OS4zLDYxNC4xIDU5NS4yLDYxNy4zIDU4NS43LDYyNi4zQzU3OC40LDYzMy4xIDU2Ny4wLDY0My44IDU2MC4yLDY0OS45TDU0OC4wLDY2MS4yTDU0OC4wLDY5MS44TDU0OC4wLDcyMi41TDUxNi4zLDc1MS41QzQ5OC45LDc2Ny41IDQ2Ni44LDc5Ni45IDQ0NS4wLDgxNy4wQzQyMy4zLDgzNy4xIDM5NC4yLDg2My44IDM4MC41LDg3Ni40QzM2Ni43LDg4OS4wIDM1NC4wLDkwMC43IDM1Mi4yLDkwMi40QzM1MC41LDkwNC4wIDM0OS4wLDkwNS4wIDM0OS4wLDkwNC42WiIgZmlsbD0iIzA1MDUwNSIgZmlsbC1ydWxlPSJldmVub2RkIi8+Cjwvc3ZnPg==") center/contain no-repeat}
+.brand-mark svg{width:16px;height:16px;stroke-width:2.5}
+.wordmark{font-weight:700;letter-spacing:.14em;font-size:15px}
+.tag{font-size:10.5px;letter-spacing:.14em;font-weight:700;color:var(--lime);border:1px solid var(--border-2);border-radius:6px;padding:2px 7px}
+.hdr-right{display:flex;align-items:center;gap:var(--s4)}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border-radius:10px;font-weight:600;font-size:13px;background:var(--lime);color:#0c0d0b;transition:background .15s;white-space:nowrap}
+.btn:hover{background:#d6ff3a}
+
+.wrap{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:260px minmax(0,1fr);gap:var(--s6);padding:0 var(--s5)}
+.side{position:sticky;top:var(--hh);align-self:start;padding:var(--s5) 0}
+.side-title{font-size:11px;letter-spacing:.14em;font-weight:700;margin-bottom:var(--s4);padding:0 var(--s3)}
+.side a{display:block;padding:7px var(--s3);border-radius:8px;color:var(--muted);transition:background .15s,color .15s;white-space:nowrap}
+.side a:hover{background:var(--panel);color:var(--text)}
+.side a[aria-current="true"]{background:var(--lime-dim);color:var(--lime)}
+
+.main{min-width:0;padding:var(--s5) 0 var(--s6);max-width:780px}
+.crumb{font-size:11.5px;letter-spacing:.12em;color:var(--muted);font-weight:600;margin-bottom:var(--s3)}
+.crumb b{color:var(--lime);font-weight:600}
+.main h1{font-size:32px;line-height:1.1;font-weight:700;letter-spacing:-.025em}
+.sub{color:var(--muted);font-size:15px;margin:var(--s2) 0 var(--s4)}
+.notice{display:flex;gap:var(--s3);align-items:flex-start;padding:var(--s3) var(--s4);border:1px solid var(--border-2);border-radius:var(--r);background:var(--panel);color:var(--muted);font-size:13px}
+.notice svg{color:var(--warn);margin-top:2px}
+.sec{padding:var(--s6) 0 var(--s4);border-bottom:1px solid var(--border);scroll-margin-top:calc(var(--hh) + 8px)}
+.sec h2{font-size:24px;font-weight:700;letter-spacing:-.015em;margin-bottom:var(--s4)}
+.sec h3{font-size:15px;font-weight:650;margin:var(--s5) 0 var(--s2);display:flex;gap:var(--s3);align-items:baseline}
+.no{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:var(--lime)}
+.sec p,.sec li{color:var(--muted);font-size:14.5px;line-height:1.7}
+.sec p{margin-bottom:var(--s3);padding-left:34px}
+.sec ul{margin:0 0 var(--s3) calc(34px + var(--s5));display:grid;gap:var(--s2)}
+.sec li::marker{color:var(--lime)}
+.ph{color:var(--warn);font-size:13px;white-space:normal}
+
+
+.foot-wrap{max-width:1240px;margin:0 auto;padding:var(--s5) var(--s5) var(--s6)}
+.badge{display:inline-flex;align-items:center;gap:var(--s2);padding:6px 10px;border:1px solid var(--border-2);border-radius:999px;font-size:12px;color:var(--text);background:var(--panel)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px var(--lime-dim);flex:none}
+.footer{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1.3fr);gap:var(--s5) var(--s6);align-items:start;padding-top:var(--s5);border-top:1px solid var(--border);color:var(--muted);font-size:12.5px}
+.footer>*{min-width:0}
+.footer-brand{display:grid;gap:var(--s3);justify-items:start}
+.footer-copy{color:var(--muted);font-size:12.5px}
+.footer-nav{display:flex;gap:var(--s2) var(--s5);align-items:center;flex-wrap:wrap}
+.footer-res{min-width:0}
+.res-links{list-style:none;display:flex;flex-wrap:wrap;gap:0 var(--s5)}
+.footer .link{display:inline-flex;align-items:center;min-height:32px;padding:0;font:inherit;font-size:12.5px;color:var(--muted);text-align:left}
+.footer .link:hover{color:var(--lime)}
+.footer .badge{white-space:nowrap}
+@media (max-width:1000px){
+  .footer{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .footer-res{grid-column:1 / -1}
+}
+@media (max-width:560px){
+  .footer{grid-template-columns:minmax(0,1fr);gap:var(--s3);padding-top:var(--s4)}
+  .footer-brand{gap:var(--s1)}
+  .footer-nav{gap:0 var(--s4);min-height:36px}
+  .footer-nav .link{min-height:36px}
+  .res-links{gap:0 var(--s4)}
+  .res-links .link{min-height:36px;min-width:28px}
+}
+
+@media (max-width:900px){
+  .wrap{display:block;padding:0 var(--s4)}
+  .hdr-in{padding:var(--s3) var(--s4);flex-wrap:nowrap}
+  .side{top:var(--hh);z-index:10;margin:0 calc(-1 * var(--s4));padding:0;background:rgba(12,13,11,.96);border-bottom:1px solid var(--border)}
+  .side-title{display:none}
+  .side nav{display:flex;gap:var(--s2);overflow-x:auto;padding:var(--s2) var(--s4);scrollbar-width:none}
+  .side a{border:1px solid var(--border-2);border-radius:999px;padding:6px 12px;font-size:13px;flex:none}
+  .main{padding-top:var(--s4)}
+  .sec{scroll-margin-top:calc(var(--hh) + 56px)}
+  .main h1{font-size:27px}
+  }
+@media (max-width:400px){.wordmark.hide-s{display:none}}
+@media (max-width:520px){
+  .sec p{padding-left:0}
+  .sec ul{margin-left:var(--s5)}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="hdr" id="hdr">
+  <div class="hdr-in">
+    <div class="brand">
+      <a class="brand" href="index.html" aria-label="BIDBROKER home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="wordmark hide-s">BIDBROKER</span>
+      </a>
+      <span class="tag">LEGAL</span>
+    </div>
+    <div class="hdr-right">
+      <a class="btn" href="index.html">Open App</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="side" aria-label="Resources navigation">
+    <p class="side-title">RESOURCES</p>
+    <nav id="resNav">
+      <a href="resources.html#terms">Terms of Service</a>
+      <a href="resources.html#privacy">Privacy Policy</a>
+      <a href="resources.html#legal">Legal</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <p class="crumb"><b>BIDBROKER</b> / RESOURCES</p>
+    <h1>Resources</h1>
+    <p class="sub">Terms of Service, Privacy Policy, and Legal Disclaimer.</p>
+    <div class="notice"><svg viewBox="0 0 24 24"><path d="M12 3l10 18H2zM12 10v5M12 18h.01"/></svg><span>Draft for review. This content requires legal review before production. Items in <span class="ph">[brackets]</span> are placeholders to be finalized.</span></div>
+    <section class="sec" id="terms" aria-labelledby="terms-h">
+      <h2 id="terms-h">Terms of Service</h2>
+      <h3><span class="no">01</span>Acceptance of the Terms</h3>
+      <p>By accessing or using the BIDBROKER website or interacting with its protocol, you agree to these Terms of Service. If you do not agree, do not use the platform.</p>
+      <h3><span class="no">02</span>The BIDBROKER Platform</h3>
+      <p>BIDBROKER is an NFT auction and ETH mining ecosystem powered by BID tokens on Robinhood Chain. The website is an interface to the protocol. Some features may be unavailable or under development.</p>
+      <h3><span class="no">03</span>Wallets and User Responsibilities</h3>
+      <p>You are solely responsible for your wallet, private keys, and recovery phrases. BIDBROKER cannot recover lost access or reverse transactions made from your wallet. You are responsible for verifying addresses and transaction details, and for making sure your use of the platform is lawful where you are.</p>
+      <h3><span class="no">04</span>NFT Auctions and Bidding</h3>
+      <p>Miner NFTs are distributed through auctions, not a fixed-price mint.</p>
+      <ul>
+        <li>Maximum NFT supply is 5,555.</li>
+        <li>One NFT auction runs at a time, and NFTs are auctioned individually.</li>
+        <li>Each new auction begins with a 30-minute countdown.</li>
+        <li>After the first valid bid, the countdown changes to 2 minutes.</li>
+        <li>Each subsequent valid highest bid resets the countdown to 2 minutes.</li>
+        <li>When the countdown reaches zero without another valid bid, the highest bidder wins.</li>
+      </ul>
+      <p>Bids are blockchain transactions and are binding once confirmed.</p>
+      <h3><span class="no">05</span>Locked Bids and Refunds</h3>
+      <p>The current highest bidder's bid remains locked. If you are outbid, your previous bid becomes refundable. You must claim your refundable balance before reusing those funds for another bid. Refundable balances are separate from tokens designated for burning.</p>
+      <h3><span class="no">06</span>Token Burn</h3>
+      <p>The protocol includes a BID token-burning mechanism, subject to the published protocol rules. Burn rules and amounts are <span class="ph">[to be announced]</span>. Burns are irreversible. Refundable balances owed to users are not burned.</p>
+      <h3><span class="no">07</span>NFT Mining and ETH Rewards</h3>
+      <p>Owners may use eligible Miner NFTs for ETH mining, up to four NFTs per wallet. ETH rewards are funded from a portion of ETH fees received by the project from token launches. Rewards depend on the protocol rules and the available ETH reward funds, and are not guaranteed. Rewards may be reduced or unavailable.</p>
+      <h3><span class="no">08</span>Transaction Fees and Finality</h3>
+      <p>Network fees apply to blockchain transactions, and failed transactions may still incur fees. Confirmed transactions are generally irreversible.</p>
+      <h3><span class="no">09</span>Prohibited Misuse and Manipulation</h3>
+      <p>You agree not to:</p>
+      <ul>
+        <li>manipulate auctions, including coordinated or deceptive bidding;</li>
+        <li>exploit bugs or vulnerabilities, or interfere with the platform or other users;</li>
+        <li>use the platform for unlawful activity;</li>
+        <li>attempt to bypass limits, restrictions, or security measures.</li>
+      </ul>
+      <h3><span class="no">10</span>Third-Party Services and External Links</h3>
+      <p>The platform may rely on or link to third-party services such as wallets, block explorers, and websites. BIDBROKER does not control them and is not responsible for their content, availability, or practices.</p>
+      <h3><span class="no">11</span>Protocol Modifications and Service Availability</h3>
+      <p>Features, parameters, and the website may be modified, suspended, or discontinued at any time. Availability is not guaranteed.</p>
+      <h3><span class="no">12</span>Limitation of Liability</h3>
+      <p>To the maximum extent permitted by applicable law, the platform is provided "as is" and "as available", and BIDBROKER is not liable for losses arising from your use of it, including losses from market movements, smart contract failures, unavailable rewards, or third-party services. Jurisdiction-specific terms: <span class="ph">[to be specified]</span>.</p>
+      <h3><span class="no">13</span>Changes to the Terms</h3>
+      <p>These Terms may be updated. Updated terms take effect when posted. Continued use after changes means you accept them. Last updated: <span class="ph">[date to be specified]</span>.</p>
+      <h3><span class="no">14</span>Contact</h3>
+      <p>Contact information: <span class="ph">[contact details to be added]</span>. Operator name, registration details, and governing jurisdiction: <span class="ph">[to be specified]</span>.</p>
+    </section>
+    <section class="sec" id="privacy" aria-labelledby="privacy-h">
+      <h2 id="privacy-h">Privacy Policy</h2>
+      <h3><span class="no">01</span>Status of This Policy</h3>
+      <p>This is a draft. Operational details that have not been confirmed are marked as placeholders and must be finalized before launch.</p>
+      <h3><span class="no">02</span>Information Collected Through the Website</h3>
+      <p>What information the website collects, if any: <span class="ph">[to be confirmed]</span>. BIDBROKER does not claim to collect or store specific personal data unless it is confirmed and listed here.</p>
+      <h3><span class="no">03</span>Public Blockchain Information</h3>
+      <p>Wallet addresses, bids, transactions, and NFT ownership are recorded on a public blockchain. This information is public by design, is not controlled by BIDBROKER, and generally cannot be altered or deleted. It is distinct from any information collected by the website itself.</p>
+      <h3><span class="no">04</span>Technical Information</h3>
+      <p>Browsers, devices, and hosting or network infrastructure typically process technical data such as IP address, browser type, and device information when you visit a website. Whether BIDBROKER stores such data: <span class="ph">[to be confirmed]</span>.</p>
+      <h3><span class="no">05</span>Cookies and Similar Technologies</h3>
+      <p>Whether cookies or similar technologies are used: <span class="ph">[to be confirmed]</span>. If used, their purposes will be described here.</p>
+      <h3><span class="no">06</span>How Information May Be Used</h3>
+      <p>If information is collected, it may be used to operate and secure the website, fix problems, understand how the site is used, and meet legal obligations. Specific uses: <span class="ph">[to be specified]</span>.</p>
+      <h3><span class="no">07</span>Third-Party Services and External Links</h3>
+      <p>Wallets, blockchain infrastructure, hosting, and linked websites may process information under their own policies. No specific analytics, advertising, or processing providers are named here: <span class="ph">[providers, if any, to be listed]</span>.</p>
+      <h3><span class="no">08</span>Data Retention</h3>
+      <p>Retention periods for any website-collected data: <span class="ph">[to be specified]</span>. On-chain data is permanent and outside BIDBROKER's control.</p>
+      <h3><span class="no">09</span>Security Practices and Limitations</h3>
+      <p>Reasonable measures may be used to protect information, but no method of transmission or storage is completely secure. You are responsible for securing your wallet and devices.</p>
+      <h3><span class="no">10</span>User Rights and Applicable Privacy Laws</h3>
+      <p>Depending on where you live, you may have rights such as access, correction, deletion, or objection regarding personal data held by the website. These rights cannot be applied to public blockchain data. Applicable laws and request process: <span class="ph">[to be specified]</span>.</p>
+      <h3><span class="no">11</span>Policy Changes</h3>
+      <p>This policy may be updated, and the updated version takes effect when posted. Last updated: <span class="ph">[date to be specified]</span>.</p>
+      <h3><span class="no">12</span>Contact</h3>
+      <p>Privacy contact: <span class="ph">[contact details to be added]</span>.</p>
+    </section>
+    <section class="sec" id="legal" aria-labelledby="legal-h">
+      <h2 id="legal-h">Legal Disclaimer</h2>
+      <h3><span class="no">01</span>No Financial Advice</h3>
+      <p>BIDBROKER content is informational and is not financial, investment, tax, or legal advice.</p>
+      <h3><span class="no">02</span>Digital Asset Risks</h3>
+      <p>Tokens and NFTs may fluctuate in value, may have limited liquidity, and may result in partial or total loss.</p>
+      <h3><span class="no">03</span>Mining Rewards</h3>
+      <p>ETH rewards depend on the protocol's rules and available ETH reward funds. Rewards are not guaranteed.</p>
+      <h3><span class="no">04</span>Blockchain Transactions</h3>
+      <p>Transactions may be irreversible. Users are responsible for verifying wallet addresses and transaction details.</p>
+      <h3><span class="no">05</span>Smart Contract Risks</h3>
+      <p>Smart contracts and blockchain applications may contain vulnerabilities or experience unexpected failures.</p>
+      <h3><span class="no">06</span>No Guarantee of Availability</h3>
+      <p>The platform and its features may be unavailable, modified, or discontinued.</p>
+      <h3><span class="no">07</span>Independent Research</h3>
+      <p>Users should conduct their own research and seek qualified professional advice where appropriate.</p>
+      <h3><span class="no">08</span>Project Status</h3>
+      <p>No claim is made that BIDBROKER is audited, legally registered, or compliant with any specific regulation unless verified information is published.</p>
+    </section>
+  </main>
+</div>
+
+<div class="foot-wrap">
+<footer class="footer">
+        <div class="footer-brand">
+          <a class="brand" href="index.html" aria-label="BIDBROKER home" style="padding:0"><span class="brand-mark" aria-hidden="true"></span><span class="wordmark">BIDBROKER</span></a>
+          <span class="footer-copy">&copy; 2026 BIDBROKER.</span>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a class="link" href="index.html#whitepaper">Whitepaper</a>
+          <span class="badge"><span class="dot" aria-hidden="true"></span>Robinhood Chain</span>
+        </nav>
+        <div class="footer-res">
+          <ul class="res-links">
+            <li><a class="link" href="docs.html">Docs</a></li>
+            <li><a class="link" href="resources.html#terms">Terms of Service</a></li>
+            <li><a class="link" href="resources.html#privacy">Privacy Policy</a></li>
+            <li><a class="link" href="resources.html#legal">Legal</a></li>
+            <li><a class="link" href="https://x.com/bidbrokerRH" target="_blank" rel="noopener noreferrer">X</a></li>
+          </ul>
+        </div>
+      </footer>
+</div>
+
+<script>
+  (function () {
+    var hdr = document.getElementById('hdr');
+    function setHeight() { document.documentElement.style.setProperty('--hh', hdr.offsetHeight + 'px'); }
+    setHeight();
+    window.addEventListener('resize', setHeight);
+
+    var nav = document.getElementById('resNav');
+    var links = [].slice.call(nav.querySelectorAll('a'));
+    var secs = ['terms', 'privacy', 'legal'].map(function (id) { return document.getElementById(id); });
+
+    function setActive(id) {
+      links.forEach(function (a) {
+        var on = a.getAttribute('href') === 'resources.html#' + id;
+        if (on) { a.setAttribute('aria-current', 'true'); } else { a.removeAttribute('aria-current'); }
+        if (on && nav.scrollWidth > nav.clientWidth) { nav.scrollTo({ left: a.offsetLeft - 16, behavior: 'smooth' }); }
+      });
+    }
+    function update() {
+      var line = hdr.offsetHeight + 90, cur = secs[0].id;
+      secs.forEach(function (s) { if (s.getBoundingClientRect().top <= line) cur = s.id; });
+      if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) cur = secs[secs.length - 1].id;
+      setActive(cur);
+    }
+    var t = false;
+    window.addEventListener('scroll', function () {
+      if (!t) { t = true; requestAnimationFrame(function () { update(); t = false; }); }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    window.addEventListener('hashchange', update);
+    update();
+  })();
+</script>
+</body>
+</html>
